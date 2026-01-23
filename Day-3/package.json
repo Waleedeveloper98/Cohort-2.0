@@ -1,0 +1,15 @@
+{
+  "name": "day-3",
+  "version": "1.0.0",
+  "description": "call back tab chale ga jb server user ke request sunne k liye ready hai tab",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
