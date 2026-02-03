@@ -1,0 +1,95 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", sans-serif;
+}
+
+body {
+  background: #f4f6f8;
+}
+
+/* App Layout */
+.app {
+  max-width: 700px;
+  margin: 50px auto;
+  padding: 20px;
+}
+
+.app-title {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #222;
+}
+
+/* Form */
+.card-form {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.input,
+.textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 15px;
+  outline: none;
+}
+
+.input:focus,
+.textarea:focus {
+  border-color: #4f46e5;
+}
+
+.textarea {
+  resize: none;
+  min-height: 100px;
+}
+
+.btn {
+  background: #4f46e5;
+  color: #fff;
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background: #4338ca;
+}
+
+/* Cards */
+.cards-container {
+  margin-top: 30px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.card {
+  background: #ffffff;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+.card-title {
+  font-size: 18px;
+  margin-bottom: 8px;
+  color: #111;
+}
+
+.card-desc {
+  font-size: 14px;
+  color: #555;
+  line-height: 1.5;
+}
