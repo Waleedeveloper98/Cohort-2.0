@@ -18,24 +18,30 @@ const App = () => {
 
   /* ===================== API CALLS ===================== */
   const fetchAllNotes = () => {
-    axios.get("http://localhost:3000/api/v1/notes").then((res) => {
-      setNotesData(res.data.notes);
-    });
+    axios
+      .get("https://cohort-2-0-6omm.onrender.com/api/v1/notes")
+      .then((res) => {
+        setNotesData(res.data.notes);
+      });
   };
 
   const handleDeleteNote = (noteId) => {
-    axios.delete(`http://localhost:3000/api/v1/notes/${noteId}`).then(() => {
-      fetchAllNotes();
-    });
+    axios
+      .delete(`https://cohort-2-0-6omm.onrender.com/api/v1/notes/${noteId}`)
+      .then(() => {
+        fetchAllNotes();
+      });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!formData.title.trim() || !formData.description.trim()) return;
-    axios.post("http://localhost:3000/api/v1/notes", formData).then(() => {
-      setFormData({ title: "", description: "" });
-      fetchAllNotes();
-    });
+    axios
+      .post("https://cohort-2-0-6omm.onrender.com/api/v1/notes", formData)
+      .then(() => {
+        setFormData({ title: "", description: "" });
+        fetchAllNotes();
+      });
   };
 
   const handleEditNote = (note) => {
@@ -50,7 +56,10 @@ const App = () => {
     e.preventDefault();
     if (!editFormData.title.trim() || !editFormData.description.trim()) return;
     axios
-      .patch(`http://localhost:3000/api/v1/notes/${editNoteId}`, editFormData)
+      .patch(
+        `https://cohort-2-0-6omm.onrender.com/api/v1/notes/${editNoteId}`,
+        editFormData,
+      )
       .then(() => {
         setEditNoteId(null);
         fetchAllNotes();
