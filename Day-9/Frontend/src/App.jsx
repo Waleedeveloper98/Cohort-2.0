@@ -52,8 +52,7 @@ const App = () => {
     axios
       .patch(`http://localhost:3000/api/v1/notes/${editNoteId}`, editFormData)
       .then(() => {
-        setEditNoteId(null)
-        console.log("updated");
+        setEditNoteId(null);
         fetchAllNotes();
       });
   };
@@ -108,7 +107,10 @@ const App = () => {
           return (
             <div key={note._id} className="card">
               {editNoteId === note._id ? (
-                <form onSubmit={(e) => handleEditSubmit(e)} className="edit-form">
+                <form
+                  onSubmit={(e) => handleEditSubmit(e)}
+                  className="edit-form"
+                >
                   <div>
                     <label htmlFor="title">Title</label>
                     <input
