@@ -112,10 +112,16 @@ authRouter.post("/login", async (req, res) => {
 
     res.status(200).json({
         message: "User Logged In",
-        user,
-        token
     })
 
+})
+
+authRouter.post("/logout", async (req, res) => {
+    res.clearCookie("jwt_token")
+
+    res.status(200).json({
+        message: "User Logged Out"
+    })
 })
 
 module.exports = authRouter
