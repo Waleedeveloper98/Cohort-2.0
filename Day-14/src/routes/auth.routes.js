@@ -63,9 +63,27 @@ authRouter.post("/register", async (req, res) => {
 
     res.status(201).json({
         message: "user created",
-        user,
+        user: {
+            name: user.name,
+            email: user.email
+        },
         token
     })
+})
+
+authRouter.get("/get-me", async (req, res) => {
+    const token = req.cookies.jwt_token;
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET)
+
+    const user = await userModel.findById(decoded.id)
+
+    res.json({
+        name: user.name,
+        email: user.email
+    })
+
+    console.log(user)
 })
 
 authRouter.post("/login", async (req, res) => {
