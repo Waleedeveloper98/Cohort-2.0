@@ -1,5 +1,4 @@
 const userModel = require("../models/user.model")
-const crypto = require("crypto")
 const jwt = require("jsonwebtoken")
 const bcrypt = require("bcryptjs")
 
@@ -67,9 +66,9 @@ const loginController = async (req, res) => {
         })
     }
 
-    const hashedPassword = await bcrypt.compare(password, user.password)
+    const isPasswordValid = await bcrypt.compare(password, user.password)
 
-    if (!hashedPassword) {
+    if (!isPasswordValid) {
         return res.status(401).json({
             message: "Invalid password"
         })
