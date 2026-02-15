@@ -21,7 +21,11 @@ const userSchema = new mongoose.Schema({
     profileImage: {
         type: String,
         default: "https://ik.imagekit.io/todbuwbsb/user%20profile"
-    }
+    },
+    savedPosts: [{
+        ref: "posts",
+        type: mongoose.Schema.Types.ObjectId
+    }]
 })
 
 const userModel = mongoose.model("users", userSchema)

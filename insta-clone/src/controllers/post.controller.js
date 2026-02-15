@@ -2,6 +2,7 @@ const postModel = require("../models/post.model")
 const ImageKit = require("@imagekit/nodejs")
 const { toFile } = require("@imagekit/nodejs")
 const jwt = require("jsonwebtoken")
+const userModel = require("../models/user.model")
 
 const imagekit = new ImageKit({
     privateKey: process.env.IMAGEKIT_PRIVATE_KEY
@@ -47,7 +48,7 @@ const createPostController = async (req, res) => {
 
 }
 
-const getPostDetails = async (req, res) => {
+const getPostController = async (req, res) => {
     const token = req.cookies.token;
     if (!token) {
         return res.status(401).json({
@@ -79,7 +80,7 @@ const getPostDetails = async (req, res) => {
     })
 }
 
-const getSpecficPostDetails = async (req, res) => {
+const getPostDetailsController = async (req, res) => {
     const token = req.cookies.token;
     if (!token) {
         return res.status(401).json({
@@ -118,8 +119,56 @@ const getSpecficPostDetails = async (req, res) => {
 
 }
 
+const savePostController = async (req, res) => {
+    const token = req.cookies.token;
+    if (!token) {
+        return res.status(401).json({
+            message: "User not found"
+        })
+    }
+    let decoded;
+    try {
+        decoded = jwt.verify(token, process.env.JWT_SECRET)
+    } catch (error) {
+        return res.status(401).json({
+            message: "User not found"
+        })
+    }
+
+    const postId = req.params.postId;
+    const userId = decoded.id
+
+    const post = await postModel.findById(postId)
+    const user = await userModel.findById(userId)
+
+    if (!post) {
+        return res.status(404).json({
+            message: "Post not found"
+        })
+    }
+    if(!user){
+        return res.status(404).json({
+            message:"User not found"
+        })
+    }
+    if (user.savedPosts.includes(postId)) {
+        return res.status(400).json({
+            message: "Already saved"
+        })
+    }
+
+    user.savedPosts.push(postId)
+    await user.save()
+
+    res.status(200).json({
+        message: "post saved"
+    })
+
+}
+
 module.exports = {
     createPostController,
-    getPostDetails,
-    getSpecficPostDetails
+    getPostController,
+    getPostDetailsController,
+    savePostController
 }
