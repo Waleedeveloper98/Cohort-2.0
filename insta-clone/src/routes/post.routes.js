@@ -3,14 +3,14 @@ const postRouter = express.Router()
 const postController = require("../controllers/post.controller")
 const multer = require("multer")
 const upload = multer({ storage: multer.memoryStorage() })
+const identifyUser = require("../middlewares/auth.middleware")
 
 
-postRouter.post("/", upload.single("image"), postController.createPostController)
+postRouter.post("/", upload.single("image"), identifyUser, postController.createPostController)
 
 postRouter.get("/details", postController.getPostController)
 
 postRouter.get("/details/:postId", postController.getPostDetailsController)
 
-postRouter.post("/save/:postId", postController.savePostController)
 
 module.exports = postRouter
