@@ -5,7 +5,7 @@ const followUserController = async (req, res) => {
     const followerUsername = req.user.username;
     const followeeUsername = req.params.username;
 
-    if (followeeUsername === followeeUsername) {
+    if (followerUsername === followeeUsername) {
         return res.status(400).json({
             message: "You cannot follow yourself"
         })
@@ -27,7 +27,7 @@ const followUserController = async (req, res) => {
     })
 
     if (isAlreadyFollowing) {
-        return res.status(400).json({
+        return res.status(404).json({
             message: "You already following this user"
         })
     }
@@ -43,6 +43,37 @@ const followUserController = async (req, res) => {
     })
 }
 
+const unfollowUserController = async (req, res) => {
+    const followerUsername = req.user.username;
+    const followeeUsername = req.params.username;
+
+    if (followerUsername === followeeUsername) {
+        return res.status(400).json({
+            message: "You cannot unfollow yourself"
+        })
+    }
+
+    const isFollowing = await followModel.findOne({
+        follower: followerUsername,
+        followee: followeeUsername,
+    })
+
+    if (!isFollowing) {
+        return res.status(400).json({
+            message: "Your not following this user"
+        })
+    }
+
+    await followModel.findByIdAndDelete(isFollowing._id)
+
+    res.status(200).json({
+        message: "successfully unfollowed",
+        isFollowing
+    })
+
+}
+
 module.exports = {
-    followUserController
+    followUserController,
+    unfollowUserController
 }
