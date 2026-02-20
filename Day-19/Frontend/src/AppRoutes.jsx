@@ -6,6 +6,7 @@ import Login from "./features/auth/pages/Login";
 const AppRoutes = () => {
   return (
     <Routes>
+      <Route path="/" element={<h1>Welcome to my app</h1>} />
       <Route path="/signup" element={<Signup />} />
       <Route path="/login" element={<Login />} />
     </Routes>

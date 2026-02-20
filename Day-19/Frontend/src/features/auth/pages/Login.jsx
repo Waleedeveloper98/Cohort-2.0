@@ -1,30 +1,26 @@
 import React, { useState } from "react";
 import "../../style/form.scss";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import loginImage from "../../../assets/login.png";
-import axios from "axios";
+import { useAuth } from "../hooks/useAuth";
+import Loader from "../components/Loader";
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
+  const { handleLogin, loading } = useAuth();
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    axios
-      .post(
-        "http://localhost:3000/api/auth/login",
-        {
-          username,
-          password,
-        },
-        {
-          withCredentials: true,
-        },
-      )
-      .then((res) => console.log(res.data))
-      .catch((err) => console.log(err.message));
+    handleLogin(username, password)
+      .then((res) => {
+        navigate("/");
+      })
+      .catch((err) => console.log(err));
   };
+
   return (
     <section>
       <div className="inner-section">
@@ -57,7 +53,7 @@ const Login = () => {
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
-              <button type="submit">Login</button>
+              <button type="submit">{loading ? <Loader /> : "Login"}</button>
             </form>
             <p className="cta">
               Create an account? <Link to={"/signup"}>Sign up</Link>
