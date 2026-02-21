@@ -1,16 +1,19 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
+import { createBrowserRouter, Routes, Route } from "react-router-dom";
 import Signup from "./features/auth/pages/Signup";
 import Login from "./features/auth/pages/Login";
 
-const AppRoutes = () => {
-  return (
-    <Routes>
-      <Route path="/" element={<h1>Welcome to my app</h1>} />
-      <Route path="/signup" element={<Signup />} />
-      <Route path="/login" element={<Login />} />
-    </Routes>
-  );
-};
-
-export default AppRoutes;
+export const router = createBrowserRouter([
+  {
+    path: "/signup",
+    element: <Signup />,
+  },
+  {
+    path: "/login",
+    element: <Login />,
+  },
+  {
+    path: "/",
+    element: <h1>Welcome to my app</h1>,
+  },
+]);
