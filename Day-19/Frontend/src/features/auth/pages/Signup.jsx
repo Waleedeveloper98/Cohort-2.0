@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router";
-import "../../style/form.scss";
+import "../../auth/style/form.scss";
 import signupImage from "../../../assets/signup.png";
 import { useAuth } from "../hooks/useAuth";
 import Loader from "../components/Loader";

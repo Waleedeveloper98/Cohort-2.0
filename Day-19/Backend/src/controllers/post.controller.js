@@ -102,10 +102,19 @@ const likePostController = async (req, res) => {
     })
 }
 
+const getFeedController = async (req, res) => {
+    const posts = await postModel.find().populate("user")
+
+    return res.status(200).json({
+        message: "all posts",
+        posts
+    })
+}
 
 module.exports = {
     createPostController,
     getPostController,
     getPostDetailsController,
-    likePostController
+    likePostController,
+    getFeedController
 }

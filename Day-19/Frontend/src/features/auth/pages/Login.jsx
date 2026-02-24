@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../../style/form.scss";
+import "../../auth/style/form.scss";
 import { Link, useNavigate } from "react-router";
 import loginImage from "../../../assets/login.png";
 import { useAuth } from "../hooks/useAuth";
