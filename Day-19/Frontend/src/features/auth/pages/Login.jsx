@@ -16,7 +16,7 @@ const Login = () => {
 
     handleLogin(username, password)
       .then((res) => {
-        navigate("/");
+        navigate("/feed");
       })
       .catch((err) => console.log(err));
   };
