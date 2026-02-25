@@ -36,6 +36,8 @@ const followUserController = async (req, res) => {
         follower: followerUsername,
         followee: followeeUsername
     })
+    follow.status = "accept"
+    await follow.save()
 
     res.status(201).json({
         message: "successfully followed user",
@@ -171,7 +173,7 @@ const getOtherUsers = async (req, res) => {
     const followers = await followModel.find({ followee: user })
     const myFollowers = followers.map(item => item.follower)
 
-    const excludedUsers = myFollows.concat(myFollowers)
+    const excludedUsers = myFollows.concat(myFollowers, user)
     const others = await userModel.find({
         username: { $nin: excludedUsers }
     })

@@ -1,6 +1,6 @@
 import "../../users/style/follows.scss";
 
-const Others = ({ others }) => {
+const Others = ({ others, handleFollowUser }) => {
   return (
     <div className="others">
       <h2>Others</h2>
@@ -8,7 +8,13 @@ const Others = ({ others }) => {
         {others?.length > 0 ? (
           others.map((user) => (
             <li key={user._id}>
-              {user.username} <button className="button">Follow</button>
+              {user.username}{" "}
+              <button
+                onClick={() => handleFollowUser(user.username)}
+                className="button"
+              >
+                Follow
+              </button>
             </li>
           ))
         ) : (

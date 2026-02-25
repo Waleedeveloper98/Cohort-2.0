@@ -19,3 +19,8 @@ export async function getOthers() {
     const response = await api.get("/api/users/others")
     return response.data
 }
+
+export async function follow(username) {
+    const response = await api.post("/api/users/follow/" + username)
+    return response.data
+}

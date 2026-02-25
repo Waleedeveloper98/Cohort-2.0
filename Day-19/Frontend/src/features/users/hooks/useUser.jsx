@@ -1,6 +1,11 @@
 import React, { useContext, useEffect } from "react";
 import { UserContext } from "../UserContext";
-import { getFollowers, getFollows, getOthers } from "../services/user.api";
+import {
+  follow,
+  getFollowers,
+  getFollows,
+  getOthers,
+} from "../services/user.api";
 
 const useUser = () => {
   const context = useContext(UserContext);
@@ -17,19 +22,29 @@ const useUser = () => {
 
   const handleGetFollows = async () => {
     const response = await getFollows();
-    console.log(response)
+    console.log(response);
     setFollowsList(response.myFollows);
-};
+  };
 
-const handleGetFollowers = async () => {
+  const handleGetFollowers = async () => {
     const response = await getFollowers();
-    console.log(response)
+    console.log(response);
     setFollowersList(response.myFollowers);
   };
   const handleOtherUsers = async () => {
     const response = await getOthers();
     console.log(response);
     setOthersList(response.others);
+  };
+
+  const handleFollowUser = async (username) => {
+    try {
+      await follow(username);
+      await handleGetFollows();
+      await handleOtherUsers();
+    } catch (error) {
+      console.log(error.response?.data);
+    }
   };
 
   useEffect(() => {
@@ -42,7 +57,8 @@ const handleGetFollowers = async () => {
     followsList,
     followersList,
     loading,
-    othersList
+    othersList,
+    handleFollowUser,
   };
 };
 
