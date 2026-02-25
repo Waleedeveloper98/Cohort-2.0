@@ -5,7 +5,10 @@ import "../src/features/shared/global.scss";
 
 const App = () => {
   return (
+    <>
     <RouterProvider router={router}></RouterProvider>
+    </>
+    
   );
 };
 

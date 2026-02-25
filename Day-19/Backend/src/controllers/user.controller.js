@@ -145,9 +145,49 @@ const followRequestAcceptController = async (req, res) => {
 
 }
 
+const getFollowsController = async (req, res) => {
+    const user = req.user.username
+    const myFollows = await followModel.find({ follower: user })
+    return res.status(200).json({
+        message: "follows list",
+        myFollows
+    })
+}
+
+const getFollowersController = async (req, res) => {
+    const user = req.user.username
+    const myFollowers = await followModel.find({ followee: user })
+    return res.status(200).json({
+        message: "followers list",
+        myFollowers
+    })
+}
+
+const getOtherUsers = async (req, res) => {
+    const user = req.user.username
+    const follows = await followModel.find({ follower: user })
+    const myFollows = follows.map(item => item.followee)
+
+    const followers = await followModel.find({ followee: user })
+    const myFollowers = followers.map(item => item.follower)
+
+    const excludedUsers = myFollows.concat(myFollowers)
+    const others = await userModel.find({
+        username: { $nin: excludedUsers }
+    })
+
+    return res.status(200).json({
+        message: "other users",
+        others
+    })
+}
+
 module.exports = {
     followUserController,
     unfollowUserController,
     followRequestRejectController,
-    followRequestAcceptController
+    followRequestAcceptController,
+    getFollowsController,
+    getFollowersController,
+    getOtherUsers
 }

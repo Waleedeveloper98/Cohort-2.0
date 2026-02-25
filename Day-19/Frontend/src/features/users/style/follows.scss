@@ -1,0 +1,32 @@
+.follows {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding-bottom: 2rem;
+  ul {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+}
+
+.others {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding-bottom: 2rem;
+  ul {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    li{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      button{
+        padding-inline: 1rem;
+        padding-block: .3rem;
+      }
+    }
+  }
+}

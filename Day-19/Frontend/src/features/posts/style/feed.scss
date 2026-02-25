@@ -1,5 +1,8 @@
+.feed-big-container{
+  display: flex;
+}
 .feed-page {
-  width: 100%;
+  flex: 1;
   height: 100vh;
   background-color: rgb(37, 37, 37);
   display: flex;
