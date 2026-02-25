@@ -64,7 +64,7 @@ const Signup = () => {
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
-              <button type="submit">
+              <button className="button" type="submit">
                 {loading ? <Loader /> : "Create account"}
               </button>
             </form>

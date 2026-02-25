@@ -1,8 +1,10 @@
 import React from "react";
 import { Heart, MessageCircle, Send, Bookmark } from "lucide-react";
 import "../style/post.scss";
+import usePost from "../hooks/usePost";
 
 const Post = ({ user, post }) => {
+  const { handleLikePost, handleUnlikePost } = usePost();
   return (
     <div className="post">
       {/* Header */}
@@ -26,6 +28,11 @@ const Post = ({ user, post }) => {
       <div className="post-actions">
         <div className="post-actions-left">
           <Heart
+            onClick={() =>
+              post.isLiked
+                ? handleUnlikePost(post._id)
+                : handleLikePost(post._id)
+            }
             fill={post.isLiked ? "red" : "none"}
             stroke={post.isLiked ? "none" : "black"}
           />
