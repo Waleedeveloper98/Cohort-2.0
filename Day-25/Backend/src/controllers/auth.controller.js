@@ -1,6 +1,7 @@
 const userModel = require("../models/user.model");
 const jwt = require("jsonwebtoken")
-const bcrypt = require("bcryptjs")
+const bcrypt = require("bcryptjs");
+const blacklistModel = require("../models/blacklist.model");
 
 const handleRegisterUser = async (req, res) => {
     const { username, email, password } = req.body
@@ -50,7 +51,7 @@ const handleLoginUser = async (req, res) => {
             { username },
             { email },
         ]
-    })
+    }).select("+password")
 
     if (!user) {
         return res.status(401).json({
@@ -82,7 +83,32 @@ const handleLoginUser = async (req, res) => {
     })
 }
 
+const handleGetMe = async (req, res) => {
+    const userId = req.user.id;
+
+    const user = await userModel.findById(userId)
+
+    return res.status(200).json({
+        message: "user details",
+        user
+    })
+}
+
+const handleLogoutUser = async (req, res) => {
+    const token = req.cookies.token
+    res.clearCookie("token")
+
+    await blacklistModel.create({ token })
+
+    return res.status(200).json({
+        message: "user logout successfully"
+    })
+}
+
+
 module.exports = {
     handleRegisterUser,
-    handleLoginUser
+    handleLoginUser,
+    handleGetMe,
+    handleLogoutUser
 }
