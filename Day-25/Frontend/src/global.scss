@@ -1,0 +1,66 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+
+:root {
+  /* ========================= */
+  /* 🎨 Brand Colors */
+  /* ========================= */
+  --color-primary: #7c3aed; /* Purple */
+  --color-secondary: #06b6d4; /* Cyan */
+  --gradient-brand: linear-gradient(135deg, #7c3aed, #06b6d4);
+
+  /* ========================= */
+  /* 🌑 Background Colors */
+  /* ========================= */
+  --bg-main: #0f172a; /* Main background */
+  --bg-section: #111827; /* Sections */
+  --bg-card: #1e293b; /* Cards / Forms */
+  --bg-hover: #273449; /* Hover surface */
+
+  /* ========================= */
+  /* ✍ Text Colors */
+  /* ========================= */
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+  --text-disabled: #64748b;
+
+  /* ========================= */
+  /* ⚡ Border Colors */
+  /* ========================= */
+  --border-subtle: #334155;
+  --border-focus: #7c3aed;
+
+  /* ========================= */
+  /* 🚦 State Colors */
+  /* ========================= */
+  --color-success: #10b981;
+  --color-error: #ef4444;
+  --color-warning: #f59e0b;
+
+  /* ========================= */
+  /* ✨ Effects */
+  /* ========================= */
+  --shadow-card: 0 10px 30px rgba(0, 0, 0, 0.4);
+  --glow-primary: 0 0 20px rgba(124, 58, 237, 0.5);
+
+  /* ========================= */
+  /* Fonts */
+  /* ========================= */
+  --inter-font: "Inter", sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: var(--inter-font);
+}
+
+a {
+  text-decoration: none;
+  color: var(--text-primary);
+}
+
+body{
+   background-color: var(--bg-main);
+}

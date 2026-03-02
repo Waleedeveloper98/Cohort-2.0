@@ -7,6 +7,6 @@ const verifyUser = require("../middlewares/auth.middleware")
 authRouter.post("/register", handleRegisterUser)
 authRouter.post("/login", handleLoginUser)
 authRouter.get("/get-me", verifyUser, handleGetMe)
-authRouter.get("/logout", verifyUser, handleLogoutUser)
+authRouter.post("/logout", verifyUser, handleLogoutUser)
 
 module.exports = authRouter

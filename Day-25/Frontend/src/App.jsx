@@ -1,16 +1,13 @@
 import React from "react";
 import FaceExpression from "./features/Expression/components/FaceExpression";
+import { RouterProvider } from "react-router-dom";
+import { router } from "./AppRoutes";
 
 const App = () => {
   return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      <FaceExpression />
+    <div>
+      <RouterProvider router={router} />
+      {/* <FaceExpression /> */}
     </div>
   );
 };
