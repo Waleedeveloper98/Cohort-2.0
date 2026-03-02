@@ -1,9 +1,9 @@
 import React from "react";
 import "../style/auth.scss";
-import AuthHero from "../../shared/components/authHero/AuthHero";
-import Logo from "../../shared/components/logo/Logo";
+import Logo from "../../shared/components/ui/logo/Logo";
 import { ArrowRight, LockKeyhole, Mail, User } from "lucide-react";
 import { Link } from "react-router-dom";
+import AuthHero from "../components/AuthHero";
 
 const Signup = () => {
   return (

@@ -1,9 +1,9 @@
 import React from "react";
 import "../style/auth.scss";
-import Logo from "../../shared/components/logo/Logo";
-import AuthHero from "../../shared/components/authHero/AuthHero";
+import Logo from "../../shared/components/ui/logo/Logo";
 import { ArrowRight, LockKeyhole, User } from "lucide-react";
 import { Link } from "react-router-dom";
+import AuthHero from "../components/AuthHero";
 
 const Login = () => {
   return (

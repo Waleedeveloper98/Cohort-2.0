@@ -1,8 +1,8 @@
 import React from "react";
-import "../authHero/authHero.scss";
-import Tag from "./Tag";
-import Heading from "./Heading";
-import Description from "./Description";
+import "../style/authHero.scss";
+import Tag from "../../shared/components/ui/tag/Tag";
+import Heading from "../../shared/components/ui/heading/Heading";
+import Description from "../../shared/components/ui/description/Description";
 
 const AuthHero = ({ tagText, titleText, descText }) => {
   return (
