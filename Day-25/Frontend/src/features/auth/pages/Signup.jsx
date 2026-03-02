@@ -1,11 +1,35 @@
-import React from "react";
+import React, { useState } from "react";
 import "../style/auth.scss";
 import Logo from "../../shared/components/ui/logo/Logo";
 import { ArrowRight, LockKeyhole, Mail, User } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import AuthHero from "../components/AuthHero";
+import useAuth from "../hooks/useAuth";
+import Loader from "../../shared/components/ui/loader/Loader";
+import toast from "react-hot-toast";
 
 const Signup = () => {
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const { handleRegister, loading } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await handleRegister(username, email, password);
+      setUsername("");
+      setEmail("");
+      setPassword("");
+      toast.success("Account created successfully");
+      navigate("/login");
+    } catch (error) {
+      toast.error(error.response?.data?.message);
+    }
+  };
+
   return (
     <section>
       <div className="left">
@@ -23,7 +47,7 @@ const Signup = () => {
             <h2>Create Account</h2>
             <p>Join Moodify and let your emotions lead.</p>
           </div>
-          <form>
+          <form onSubmit={handleSubmit}>
             <div className="input-box">
               <label htmlFor="username">Username</label>
               <div className="inner">
@@ -33,6 +57,8 @@ const Signup = () => {
                   id="username"
                   type="text"
                   placeholder="Your unique handle"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
                 />
               </div>
             </div>
@@ -45,6 +71,8 @@ const Signup = () => {
                   id="email"
                   type="email"
                   placeholder="name@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
             </div>
@@ -58,11 +86,19 @@ const Signup = () => {
                   name="password"
                   id="password"
                   placeholder="......."
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
             </div>
             <button type="submit">
-              Create Account <ArrowRight size={18} />
+              {loading ? (
+                <Loader />
+              ) : (
+                <>
+                  Create Account <ArrowRight size={18} />
+                </>
+              )}
             </button>
           </form>
           <p className="bottom">
