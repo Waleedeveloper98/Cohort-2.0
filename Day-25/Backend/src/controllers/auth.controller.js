@@ -46,14 +46,14 @@ const handleRegisterUser = async (req, res) => {
 }
 
 const handleLoginUser = async (req, res) => {
-    const { username, email, password } = req.body
+     const { usernameOrEmail, password } = req.body;
 
-    const user = await userModel.findOne({
-        $or: [
-            { username: username },
-            { email: email },
-        ]
-    }).select("+password")
+  const user = await userModel.findOne({
+    $or: [
+      { username: usernameOrEmail },
+      { email: usernameOrEmail },
+    ],
+  }).select("+password");
 
     if (!user) {
         return res.status(401).json({

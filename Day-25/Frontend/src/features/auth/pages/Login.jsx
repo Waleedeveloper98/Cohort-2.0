@@ -21,7 +21,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await handleLogin({username, password});
+      await handleLogin({usernameOrEmail:username, password});
       toast.success("user logged In successfully");
       setUsername("");
       setPassword("");

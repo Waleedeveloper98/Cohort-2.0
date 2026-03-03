@@ -20,21 +20,16 @@ const useAuth = () => {
         }
     }
 
-    const handleLogin = async ({ username, email, password }) => {
-        setLoading(true)
-        try {
-            const data = await login({ username, email, password })
-            setUser(data.user)
-            console.log(data)
-            return data.user
-        } catch (error) {
-            console.log(error)
-            throw error
-        }
-        finally {
-            setLoading(false)
-        }
-    }
+ const handleLogin = async ({ usernameOrEmail, password }) => {
+  setLoading(true);
+  try {
+    const data = await login({ usernameOrEmail, password });
+    setUser(data.user);
+    return data.user;
+  } finally {
+    setLoading(false);
+  }
+};
 
     const handleGetMe = async () => {
         try {
