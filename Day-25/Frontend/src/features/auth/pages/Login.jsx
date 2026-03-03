@@ -8,6 +8,7 @@ import useAuth from "../hooks/useAuth";
 import toast from "react-hot-toast";
 import Loader from "../../shared/components/ui/loader/Loader";
 import Confetti from "react-confetti-boom";
+import FormGroup from "../components/FormGroup";
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -20,7 +21,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await handleLogin(username, password);
+      await handleLogin({username, password});
       toast.success("user logged In successfully");
       setUsername("");
       setPassword("");
@@ -60,35 +61,23 @@ const Login = () => {
             <p>Enter your details to access your vibes.</p>
           </div>
           <form onSubmit={handleSubmit}>
-            <div className="input-box">
-              <label htmlFor="usernameOrEmail">Username or Email</label>
-              <div className="inner">
-                <User stroke="#334155" size={18} className="icon" />
-                <input
-                  name="usernameOrEmail"
-                  id="usernameOrEmail"
-                  type="text"
-                  placeholder="username or email"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                />
-              </div>
-            </div>
-            <div className="input-box">
-              <label htmlFor="password">Password</label>
-              <div className="inner">
-                <LockKeyhole stroke="#334155" size={18} className="icon" />
-                <input
-                  className="password-dots"
-                  type="password"
-                  name="password"
-                  id="password"
-                  placeholder="......."
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </div>
-            </div>
+            <FormGroup
+              label={"usernameOrEmail"}
+              labelText={"Username or Email"}
+              icon={User}
+              type={"text"}
+              placeholder={"username or email"}
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+            <FormGroup
+              label={"password"}
+              icon={LockKeyhole}
+              type={"password"}
+              placeholder={"......."}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
             <button type="submit">
               {loading ? (
                 <Loader />

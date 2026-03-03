@@ -50,8 +50,8 @@ const handleLoginUser = async (req, res) => {
 
     const user = await userModel.findOne({
         $or: [
-            { username },
-            { email },
+            { username: username },
+            { email: email },
         ]
     }).select("+password")
 

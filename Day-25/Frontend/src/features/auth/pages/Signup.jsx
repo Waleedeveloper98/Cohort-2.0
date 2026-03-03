@@ -7,6 +7,7 @@ import AuthHero from "../components/AuthHero";
 import useAuth from "../hooks/useAuth";
 import Loader from "../../shared/components/ui/loader/Loader";
 import toast from "react-hot-toast";
+import FormGroup from "../components/FormGroup";
 
 const Signup = () => {
   const [username, setUsername] = useState("");
@@ -48,49 +49,30 @@ const Signup = () => {
             <p>Join Moodify and let your emotions lead.</p>
           </div>
           <form onSubmit={handleSubmit}>
-            <div className="input-box">
-              <label htmlFor="username">Username</label>
-              <div className="inner">
-                <User stroke="#334155" size={18} className="icon" />
-                <input
-                  name="username"
-                  id="username"
-                  type="text"
-                  placeholder="Your unique handle"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                />
-              </div>
-            </div>
-            <div className="input-box">
-              <label htmlFor="email">Email Address</label>
-              <div className="inner">
-                <Mail size={18} className="icon" />
-                <input
-                  name="email"
-                  id="email"
-                  type="email"
-                  placeholder="name@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </div>
-            </div>
-            <div className="input-box">
-              <label htmlFor="password">Password</label>
-              <div className="inner">
-                <LockKeyhole stroke="#334155" size={18} className="icon" />
-                <input
-                  className="password-dots"
-                  type="password"
-                  name="password"
-                  id="password"
-                  placeholder="......."
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </div>
-            </div>
+            <FormGroup
+              label={"username"}
+              placeholder={"Your unique handle"}
+              type={"text"}
+              icon={User}
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+            <FormGroup
+              label={"email"}
+              placeholder={"name@example.com"}
+              type={"email"}
+              icon={Mail}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <FormGroup
+              label={"password"}
+              placeholder={"......."}
+              type={"password"}
+              icon={LockKeyhole}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
             <button type="submit">
               {loading ? (
                 <Loader />
