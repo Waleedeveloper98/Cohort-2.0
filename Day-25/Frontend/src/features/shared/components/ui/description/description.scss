@@ -1,6 +1,6 @@
 p {
-  width: 65%;
-  font-size: 0.8rem;
+  width: clamp(90%, 65%, 65%);
+  font-size: clamp(0.75rem, 1vw, 0.9rem);
   color: var(--text-secondary);
   line-height: 1.5;
 }

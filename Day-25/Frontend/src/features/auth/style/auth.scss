@@ -34,7 +34,7 @@ section {
       .top {
         display: flex;
         flex-direction: column;
-        gap: .5rem;
+        gap: 0.5rem;
         h2 {
           font-size: 2rem;
           color: var(--text-primary);
@@ -118,6 +118,81 @@ section {
         color: var(--text-secondary);
         a {
           color: var(--color-primary);
+        }
+      }
+    }
+  }
+}
+
+/* ===============================
+   Tablet (max-width: 992px)
+================================ */
+
+@media (max-width: 992px) {
+  section {
+    flex-direction: column;
+    height: auto;
+    padding: 2rem;
+
+    .left,
+    .right {
+      width: 100%;
+    }
+
+    .left {
+      gap: 4rem;
+      align-items: center;
+      text-align: center;
+    }
+
+    .right {
+      margin-top: 2rem;
+
+      .form-container {
+        width: 100%;
+        max-width: 420px;
+
+        form {
+          width: 100%;
+        }
+      }
+    }
+  }
+}
+
+/* ===============================
+   Mobile (max-width: 600px)
+================================ */
+
+@media (max-width: 600px) {
+  section {
+    padding: 1.5rem 1rem;
+
+    .left {
+      gap: 2rem;
+    }
+
+    .right {
+      .form-container {
+        padding: 1.5rem;
+
+        .top {
+          h2 {
+            font-size: 1.5rem;
+          }
+
+          p {
+            font-size: 0.8rem;
+          }
+        }
+
+        form {
+          gap: 0.8rem;
+
+          button {
+            height: 50px;
+            font-size: 0.9rem;
+          }
         }
       }
     }
