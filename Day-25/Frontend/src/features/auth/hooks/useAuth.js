@@ -20,10 +20,10 @@ const useAuth = () => {
         }
     }
 
-    const handleLogin = async ({ usernameOrEmail, password }) => {
+    const handleLogin = async ({ username, email, password }) => {
         setLoading(true);
         try {
-            const data = await login({ usernameOrEmail, password });
+            const data = await login({ username, email, password });
             setUser(data.user);
             return data.user;
         } finally {
