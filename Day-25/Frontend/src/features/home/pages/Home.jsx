@@ -1,32 +1,28 @@
 import React from "react";
 import useAuth from "../../auth/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
+import FaceExpression from "../../Expression/components/FaceExpression";
+import Player from "../components/Player";
+import "../style/home.scss";
+import Logo from "../../shared/components/ui/logo/Logo";
+import { useSong } from "../hooks/useSong";
 
 const Home = () => {
-  const { user, handleLogout } = useAuth();
-  const navigate = useNavigate();
+  const { handleGetSong } = useSong();
 
-  const handleSubmitLogout = async () => {
-    await handleLogout();
-    navigate("/login");
-  };
 
   return (
-    <>
-      <h1 className="home">username: {user?.username}</h1>
-      <h1 className="home">email: {user?.email}</h1>
-
-      <button
-        onClick={handleSubmitLogout}
-        style={{
-          backgroundColor: "blue",
-          color: "white",
-          padding: "10px 20px",
-        }}
-      >
-        Logout
-      </button>
-    </>
+    <section className="home">
+      <div className="left">
+        <Logo />
+        <FaceExpression
+          onClick={(expression) => handleGetSong({ mood: expression })}
+        />
+      </div>
+      <div className="right">
+        <Player />
+      </div>
+    </section>
   );
 };
 
