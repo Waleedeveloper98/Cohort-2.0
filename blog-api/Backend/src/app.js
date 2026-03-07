@@ -2,6 +2,7 @@ const express = require("express")
 const authRouter = require("./routes/auth.routes")
 const cookieParser = require("cookie-parser")
 const postRouter = require("./routes/post.routes")
+const errorHandler = require("./middlewares/errorHandler")
 
 
 const app = express()
@@ -10,5 +11,7 @@ app.use(cookieParser())
 
 app.use("/api/auth", authRouter)
 app.use("/api/posts", postRouter)
+
+app.use(errorHandler)
 
 module.exports = app

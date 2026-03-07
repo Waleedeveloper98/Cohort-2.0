@@ -1,22 +1,20 @@
+const asyncHandler = require("../middlewares/asyncHandler")
 const postModel = require("../models/post.model")
 const userModel = require("../models/user.model")
 const validateObjectId = require("../services/validateId.service")
+const AppError = require("../utils/appError")
 
 
-const createBlog = async (req, res) => {
+const createBlog = asyncHandler(async (req, res, next) => {
     const { title, content } = req.body
 
     if (!title || !content) {
-        return res.status(400).json({
-            message: "All fields are required"
-        })
+        return next(new AppError("All fields are required", 400))
     }
     const userId = req.user.id
 
     if (!userId) {
-        return res.status(401).json({
-            message: "Invalid User"
-        })
+        return next(new AppError("Invalid User", 401))
     }
 
     const blog = await postModel.create({
@@ -27,50 +25,47 @@ const createBlog = async (req, res) => {
 
     return res.status(201).json({
         message: "blog created successfully",
-        blog
+        data: blog
     })
-}
+})
 
-const getAllBlogs = async (req, res) => {
+const getAllBlogs = asyncHandler(async (req, res, next) => {
 
     const blogs = await postModel.find().populate("user", "username email")
 
     return res.status(200).json({
         message: "All blog posts",
-        blogs
+        data: blogs
     })
-}
+})
 
-const getSingleBlogPost = async (req, res) => {
+const getSingleBlogPost = asyncHandler(async (req, res, next) => {
     const postId = req.params.postId;
 
     if (!validateObjectId(postId)) {
-        return res.status(400).json({
-            message: "Invalid post id"
-        })
+        return next(new AppError("Invalid post id", 400))
     }
 
     const blog = await postModel.findById(postId).populate("user", "username email");
 
     if (!blog) {
-        return res.status(404).json({
-            message: "blog post not found"
-        })
+        return next(new AppError("blog post not found", 404))
     }
 
     return res.status(200).json({
         message: "blog post",
-        blog
+        data: blog
     })
-}
+})
 
-const getAllMyBlogs = async (req, res) => {
+const getAllMyBlogs = asyncHandler(async (req, res, next) => {
     const userId = req.user.id;
 
     const blogs = await postModel.find({ user: userId })
 
     if (blogs.length === 0) {
         return res.status(200).json({
+            message: "No blogs found",
             blogs: []
         })
     }
@@ -80,29 +75,24 @@ const getAllMyBlogs = async (req, res) => {
         blogs
     })
 }
+)
 
-const updateBlogPost = async (req, res) => {
+const updateBlogPost = asyncHandler(async (req, res, next) => {
     const postId = req.params.postId;
     const { title, content } = req.body
 
     if (!title || !content) {
-        return res.status(400).json({
-            message: "Title and content required"
-        })
+        return next(new AppError("Title and content required", 400))
     }
 
     if (!validateObjectId(postId)) {
-        return res.status(400).json({
-            message: "Invalid post id"
-        })
+        return next(new AppError("Invalid post id", 400))
     }
 
     const blog = await postModel.findById(postId)
 
     if (!blog) {
-        return res.status(404).json({
-            message: "blog post not found"
-        })
+        return next(new AppError("blog post not found", 404))
     }
 
     const author = req.user.id
@@ -110,12 +100,8 @@ const updateBlogPost = async (req, res) => {
 
     const isAuthor = author === postUser
     if (!isAuthor) {
-        return res.status(403).json({
-            message: "only blog author can update his blog post"
-        })
+        return next(new AppError("only blog author can update his blog post", 403))
     }
-
-
 
     blog.title = title;
     blog.content = content;
@@ -130,24 +116,20 @@ const updateBlogPost = async (req, res) => {
         }
     })
 
-}
+})
 
-const deleteBlogPost = async (req, res) => {
+const deleteBlogPost = asyncHandler(async (req, res, next) => {
     const postId = req.params.postId;
 
     if (!validateObjectId(postId)) {
-        return res.status(400).json({
-            message: "Invalid post id"
-        })
+        return next(new AppError("Invalid post id", 400))
     }
 
     const blog = await postModel.findById(postId)
 
 
     if (!blog) {
-        return res.status(404).json({
-            message: "blog post not found"
-        })
+        return next(new AppError("blog post not found", 404))
     }
 
     const author = req.user.id;
@@ -156,17 +138,15 @@ const deleteBlogPost = async (req, res) => {
     const isAuthor = author === blogUser
 
     if (!isAuthor) {
-        return res.status(403).json({
-            message: "only author can delete his blog post"
-        })
+        return next(new AppError("only author can delete his blog post", 403))
     }
 
-    await postModel.findByIdAndDelete(postId)
+    await blog.deleteOne()
 
     return res.status(200).json({
         message: "blog post deleted successfully",
     })
-}
+})
 
 
 module.exports = {
