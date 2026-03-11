@@ -2,18 +2,12 @@ const userModel = require("../models/user.model")
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
 const asyncHandler = require("../middlewares/asyncHandler")
-const AppError = require("../utils/appError")
+const AppError = require("../utils/AppError")
+
 
 const registerUser = asyncHandler(async (req, res, next) => {
 
     const { username, email, password } = req.body
-
-    if (!username || !email || !password) {
-        // const error = new Error("All fields are required")
-        // error.statusCode = 400
-        // return next(error)
-        return next(new AppError("All fields are required", 400))
-    }
 
     const isUserAlreadyExist = await userModel.findOne({
         $or: [{ username }, { email }]
@@ -53,51 +47,48 @@ const registerUser = asyncHandler(async (req, res, next) => {
     })
 })
 
-const loginUser = async (req, res) => {
-    try {
-        const { username, email, password } = req.body
+const loginUser = asyncHandler(async (req, res, next) => {
 
-        if (!username || !password) {
-            return next(new AppError("All fields are required", 400))
-        }
-        const user = await userModel.findOne({
-            $or: [
-                { username: username },
-                { email: username }
-            ]
-        }).select("+password")
+    const { username, password } = req.body
 
-        if (!user) {
-            return next(new AppError("Invalid Credentials", 401))
-        }
+    const user = await userModel.findOne({
+        $or: [
+            { username: username },
+            { email: username }
+        ]
+    }).select("+password")
 
-
-        const isPasswordMatched = await bcrypt.compare(password, user.password)
-
-        if (!isPasswordMatched) {
-            return next(new AppError("Invalid Credentials", 401))
-        }
-
-        const token = jwt.sign({
-            id: user._id,
-            username: user.username,
-        }, process.env.JWT_SECRET, { expiresIn: "1d" })
-
-        res.cookie("token", token)
-
-        return res.status(200).json({
-            message: "user successfully logged-in",
-            user: {
-                username: user.username,
-                email: user.email,
-                role: user.role
-            }
-        })
-    } catch (error) {
-        next(error)
+    if (!user) {
+        return next(new AppError("Invalid Credentials", 401))
     }
 
-}
+    const isPasswordMatched = await bcrypt.compare(password, user.password)
+
+    if (!isPasswordMatched) {
+        return next(new AppError("Invalid Credentials", 401))
+    }
+
+    const token = jwt.sign(
+        {
+            id: user._id,
+            username: user.username
+        },
+        process.env.JWT_SECRET,
+        { expiresIn: "1d" }
+    )
+
+    res.cookie("token", token)
+
+    res.status(200).json({
+        message: "User successfully logged-in",
+        user: {
+            username: user.username,
+            email: user.email,
+            role: user.role
+        }
+    })
+
+})
 
 module.exports = {
     registerUser,
