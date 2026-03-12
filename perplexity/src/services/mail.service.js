@@ -22,7 +22,6 @@ transporter.verify()
 
 
 export async function sendEmail({to, subject, html, text}) {
-    console.log("Recipient:", to)
     const mailOptions = {
         from: process.env.GOOGLE_USER,
         to,
@@ -32,6 +31,4 @@ export async function sendEmail({to, subject, html, text}) {
     }
 
     const details = await transporter.sendMail(mailOptions)
-
-    console.log("Email send:", details)
 }
