@@ -12,7 +12,7 @@ export const register = asyncHandler(async (req, res, next) => {
     })
 
     if (isUserAlreadyExists) {
-        return next(new AppError("User with this email or username already exists"), 409)
+        return next(new AppError("An account with this email or username already exists.", 409))
     }
 
     const user = await userModel.create({
@@ -38,7 +38,7 @@ export const register = asyncHandler(async (req, res, next) => {
 
     return res.status(201).json({
         success: true,
-        message: "user registered successfully",
+        message: "Registration successful. Please verify your email to activate your account.",
         user: {
             id: user._id,
             username: user.username,
@@ -51,21 +51,21 @@ export const register = asyncHandler(async (req, res, next) => {
 export const verifyEmail = asyncHandler(async (req, res, next) => {
     const { token } = req.query
     if (!token) {
-        return next(new AppError("Token is required", 400))
+        return next(new AppError("Verification token is missing.", 400))
     }
     const decoded = jwt.verify(token, process.env.JWT_SECRET)
 
     const user = await userModel.findOne({ email: decoded.email })
 
     if (!user) {
-        return next(new AppError("Invalid User", 401))
+        return next(new AppError("User associated with this token was not found.", 404))
     }
     user.verified = true
     await user.save()
 
     return res.send(`
             <h1>Email Verified Successfully</h1>
-            <p>Your email has been verified successfully. You can now login to your account.</p>
+            <p>Your account is now active. You may proceed to login.</p>
             <a href="http://localhost:3000/login">Go to Login</a>
         `)
 })
@@ -79,17 +79,17 @@ export const login = async (req, res) => {
     })
 
     if (!user) {
-        return next(new AppError("Invalid Credentials", 401))
+        return next(new AppError("Invalid username/email or password.", 401))
     }
 
     const isPasswordMatched = await user.comparePassword(password)
 
     if (!isPasswordMatched) {
-        return next(new AppError("Invalid Credentials", 401))
+        return next(new AppError("Invalid username/email or password.", 401))
     }
 
     if (!user.verified) {
-        return next(new AppError("Please verify email first before login", 401))
+        return next(new AppError("Email verification required before logging in.", 403))
     }
 
     const token = jwt.sign({
@@ -100,7 +100,7 @@ export const login = async (req, res) => {
 
     return res.status(200).json({
         success: true,
-        message: "user logged-in successfully",
+        message: "Login successful.",
         user: {
             username: user.username,
             email: user.email
@@ -116,7 +116,7 @@ export const getMe = async (req, res) => {
 
     return res.status(200).json({
         success: true,
-        message: "user fetched successfully",
+        message: "User profile retrieved successfully.",
         user: {
             username: user.username,
             email: user.email
