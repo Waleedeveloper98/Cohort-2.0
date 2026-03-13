@@ -5,7 +5,7 @@ import { generateMessages } from "./src/services/ai.service.js"
 
 const PORT = process.env.PORT || 8000
 
-generateMessages("Give me a detailed answer: Which planet is closest to the sun?")
+// generateMessages("Give me a detailed answer: Which planet is closest to the sun?")
 
 connectToDB()
     .catch((err) => {
