@@ -311,6 +311,7 @@ export const login = asyncHandler(async (req, res, next) => {
     success: true,
     message: "Login successful.",
     user: {
+      id:user._id,
       username: user.username,
       email: user.email
     }
@@ -327,6 +328,7 @@ export const getMe = async (req, res) => {
     success: true,
     message: "User profile retrieved successfully.",
     user: {
+      id:user._id,
       username: user.username,
       email: user.email
     }
