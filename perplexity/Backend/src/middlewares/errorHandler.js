@@ -3,6 +3,7 @@ export const errorHandler = (err, req, res, next) => {
 
     return res.status(statusCode).json({
         success: false,
-        message: err.message || "Internal Server error"
+        message: err.message || "Internal Server error",
+        stack: err.stack
     })
 }
