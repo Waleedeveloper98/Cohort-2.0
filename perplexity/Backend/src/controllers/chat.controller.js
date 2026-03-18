@@ -23,7 +23,7 @@ export const sendMessage = async (req, res) => {
     })
 
     const messages = await messageModel.find({ chat: chatId })
-    
+
     const result = await generateMessages(messages)
 
     const aiMessage = await messageModel.create({
@@ -36,5 +36,61 @@ export const sendMessage = async (req, res) => {
         chat,
         title,
         aiMessage
+    })
+}
+
+export const getChats = async (req, res) => {
+    const user = req.user
+
+    const chats = await chatModel.find({ user: user.id })
+
+    return res.status(200).json({
+        message: "chats fetched successfully",
+        chats
+    })
+}
+
+
+export const getMessages = async (req, res) => {
+    const { chatId } = req.params
+
+    const chat = await chatModel.findOne({
+        _id: chatId,
+        user: req.user.id
+    })
+
+    if (!chat) {
+        return res.status(400).json({
+            message: "Not chat found"
+        })
+    }
+
+    const messages = await messageModel.find({ chat: chatId })
+
+    return res.status(200).json({
+        message: "all messages fetched",
+        messages
+    })
+}
+
+export const deleteChat = async (req, res) => {
+    const { chatId } = req.params
+
+    const chat = await chatModel.findOneAndDelete({
+        _id: chatId,
+        user: req.user.id
+    })
+    if (!chat) {
+        return res.status(400).json({
+            message: "Not chat found"
+        })
+    }
+
+    await messageModel.deleteMany({
+        chat: chatId
+    })
+
+    return res.status(200).json({
+        message: "Chat deleted successfully"
     })
 }
