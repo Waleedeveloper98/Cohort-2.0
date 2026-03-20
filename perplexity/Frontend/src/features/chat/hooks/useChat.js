@@ -10,41 +10,57 @@ export const useChat = () => {
     const dispatch = useDispatch()
 
     const handleSendMessage = async ({ message, chatId }) => {
-        dispatch(setLoading(true));
+        try {
+            dispatch(setLoading(true));
 
-        const data = await sendMessage({ message, chatId });
-        const { chat, aiMessage } = data;
+            const data = await sendMessage({ message, chatId });
 
-        const cleanTitle = chat.title
-            ?.replace(/^"+|"+$/g, "")
-            ?.replace(/\*\*/g, "") || "New Chat";
+            console.log("API Response:", data);
 
-        // ✅ Only create chat if it doesn't exist
-        if (!chats[chat._id]) {
-            dispatch(createNewChat({
-                chatId: chat._id,
-                title: cleanTitle,
+            const { chat, aiMessage } = data;
+
+            // ✅ Get chatId safely
+            const finalChatId =
+                chat?._id || aiMessage?.chat || chatId;
+
+            if (!finalChatId) {
+                console.error("No chatId found!");
+                return;
+            }
+
+            const cleanTitle =
+                chat?.title?.replace(/^"+|"+$/g, "")
+                    ?.replace(/\*\*/g, "") || "New Chat";
+
+            // ✅ Create chat only if not exists
+            if (!chats[finalChatId]) {
+                dispatch(createNewChat({
+                    chatId: finalChatId,
+                    title: cleanTitle,
+                }));
+            }
+
+            // ✅ Add user message
+            dispatch(addNewMessage({
+                chatId: finalChatId,
+                content: message,
+                role: "user"
             }));
+
+            // ✅ Add AI message
+            dispatch(addNewMessage({
+                chatId: finalChatId,
+                content: aiMessage.content,
+                role: aiMessage.role
+            }));
+
+            dispatch(setCurrentChatId(finalChatId));
+
+        } catch (error) {
+            console.error(error);
+        } finally {
+            dispatch(setLoading(false));
         }
-
-        // ✅ Add user message
-        dispatch(addNewMessage({
-            chatId: chat._id,
-            content: message,
-            role: "user"
-        }));
-
-        // ✅ Add AI message
-        dispatch(addNewMessage({
-            chatId: chat._id,
-            content: aiMessage.content,
-            role: aiMessage.role
-        }));
-
-        // ✅ Set active chat
-        dispatch(setCurrentChatId(chat._id));
-
-        dispatch(setLoading(false));
     };
     const handleGetChats = async () => {
         dispatch(setLoading(true))

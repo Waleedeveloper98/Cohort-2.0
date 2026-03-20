@@ -1,6 +1,8 @@
-import { AIMessage, HumanMessage, SystemMessage } from "langchain";
+import { AIMessage, HumanMessage, SystemMessage, tool, createAgent } from "langchain";
 import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 import { ChatMistralAI } from "@langchain/mistralai";
+import { searchInternet } from "./internet.service.js";
+import z from "zod";
 
 
 const geminiModel = new ChatGoogleGenerativeAI({
@@ -13,16 +15,43 @@ const mistralModel = new ChatMistralAI({
     apiKey: process.env.MISTRAL_API_KEY
 })
 
-export const generateMessages = async (messages) => {
-    const response = await geminiModel.invoke(messages.map(msg => {
-        if (msg.role === "user") {
-            return new HumanMessage(msg.content)
-        } else if (msg.role === "ai") {
-            return new AIMessage(msg.content)
-        }
-    }))
+const searchInternetTool = tool(
+    searchInternet,
+    {
+        name: "searchInternet",
+        description: "Use this tool to get the latest information from the internet.",
+        schema: z.object({
+            query: z.string().describe("The search query to look up on the internet.")
+        })
+    }
+)
+const agent = createAgent({
+    model: mistralModel,
+    tools: [searchInternetTool]
+})
 
-    return response.text
+
+
+export const generateMessages = async (messages) => {
+    console.log(messages)
+
+    const response = await agent.invoke({
+        messages: [
+            new SystemMessage(`
+                You are a helpful and precise assistant for answering questions.
+                If you don't know the answer, say you don't know. 
+                If the question requires up-to-date information, use the "searchInternet" tool to get the latest information from the internet and then answer based on the search results.
+            `),
+            ...(messages.map(msg => {
+                if (msg.role == "user") {
+                    return new HumanMessage(msg.content)
+                } else if (msg.role == "ai") {
+                    return new AIMessage(msg.content)
+                }
+            }))]
+    });
+
+    return response.messages[response.messages.length - 1].text;
 }
 
 export const generateChatTitle = async (message) => {
