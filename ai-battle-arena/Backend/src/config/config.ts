@@ -1,9 +1,9 @@
 import "dotenv/config"
 
 type CONFIG = {
-    readonly GOOGLE_API_KEY: string,
-    readonly MISTRAL_API_KEY: string,
-    readonly COHERE_API_KEY: string
+    GOOGLE_API_KEY: string,
+    MISTRAL_API_KEY: string,
+    COHERE_API_KEY: string
 }
 
 const config: CONFIG = {
