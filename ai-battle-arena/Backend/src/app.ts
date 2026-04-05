@@ -4,6 +4,7 @@ import cors from "cors";
 import path from "path";
 
 const app = express();
+app.use(express.static("public"));
 app.use(express.json());
 app.use(
   cors({
@@ -32,7 +33,7 @@ app.post("/invoke", async (req, res) => {
 });
 
 app.use("*name", (req, res) => {
-  res.sendFile(path.join(__dirname,"..", "/public/index.html"));
+  res.sendFile(path.join(__dirname, "..", "/public/index.html"));
 });
 
 export default app;
