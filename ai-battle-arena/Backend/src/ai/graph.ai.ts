@@ -70,7 +70,7 @@ const graph = new StateGraph(state)
     .addEdge("judge", END)
     .compile()
 
-export default async function runGraph(userMessage: string) {
+export default async function runGraph(userMessage: string): Promise<any> {
     const result = await graph.invoke({
         problem: userMessage
     })
