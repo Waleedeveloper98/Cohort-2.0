@@ -31,7 +31,7 @@ app.post("/invoke", async (req, res) => {
   });
 });
 
-app.use("*", (req, res) => {
+app.use("*name", (req, res) => {
   res.sendFile(path.join(__dirname, "./public/index.html"));
 });
 
