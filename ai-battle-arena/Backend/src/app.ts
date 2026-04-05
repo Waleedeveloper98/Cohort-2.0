@@ -1,31 +1,38 @@
-import express from "express"
-import useGraph from "../src/ai/graph.ai.js"
-import cors from "cors"
+import express from "express";
+import useGraph from "../src/ai/graph.ai.js";
+import cors from "cors";
+import path from "path";
 
-const app = express()
-app.use(express.json())
-app.use(cors({
+const app = express();
+app.use(express.json());
+app.use(
+  cors({
     origin: "http://localhost:5173",
     methods: ["GET", "POST"],
-    credentials: true
-}))
+    credentials: true,
+  }),
+);
 
 app.post("/invoke", async (req, res) => {
-    const { input } = req.body;
-    console.log("INPUT:", input);
-    if (!input || input.trim() === "") {
-        return res.status(400).json({
-            message: "Input is required",
-            success: false
-        });
-    }
-    const result = await useGraph(input)
+  const { input } = req.body;
+  console.log("INPUT:", input);
+  if (!input || input.trim() === "") {
+    return res.status(400).json({
+      message: "Input is required",
+      success: false,
+    });
+  }
+  const result = await useGraph(input);
 
-    res.status(200).json({
-        message: "Graph executed successfully",
-        success: true,
-        result
-    })
-})
+  res.status(200).json({
+    message: "Graph executed successfully",
+    success: true,
+    result,
+  });
+});
+
+app.use("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "./public/index.html"));
+});
 
 export default app;
