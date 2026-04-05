@@ -32,7 +32,7 @@ app.post("/invoke", async (req, res) => {
   });
 });
 
-app.use("*", (req, res) => {
+app.use((req, res) => {
   res.sendFile(path.join(process.cwd(), "public", "index.html"));
 });
 
