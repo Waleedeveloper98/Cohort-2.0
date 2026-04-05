@@ -5,92 +5,116 @@ import { UserPrompt } from "../components/UserPrompt";
 import { SolutionCard } from "../components/SolutionCard";
 import { VerdictCard } from "../components/VerdictCard";
 import { EmptyState } from "../components/EmptyState";
-import { CheckIcon, AlertIcon } from "../components/Icons";
+import { useArena } from "../hooks/useArena";
 
 export default function ArenaPage() {
   const [prompt, setPrompt] = useState("");
   const [isAnalyzed, setIsAnalyzed] = useState(false);
 
-  const handleSubmit = (e) => {
+  const { handleAiService, messages, setMessages, loading } = useArena();
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!prompt.trim()) return;
     setIsAnalyzed(true);
+    setMessages(null);
+    await handleAiService({ input: prompt });
   };
 
   return (
-    <div 
+    <div
       className="flex flex-col overflow-hidden"
       style={{
-        height: '100vh',
-        backgroundColor: 'var(--color-bg-base)',
-        color: 'var(--color-text-slate-200)',
-        fontFamily: 'var(--font-family-base)'
+        height: "100vh",
+        backgroundColor: "var(--color-bg-base)",
+        color: "var(--color-text-slate-200)",
+        fontFamily: "var(--font-family-base)",
       }}
     >
       <TopNav />
 
       {/* Main Layout Area */}
-      <div 
+      <div
         className="flex flex-1 overflow-hidden w-full"
-        style={{ paddingTop: 'var(--nav-height)' }}
+        style={{ paddingTop: "var(--nav-height)" }}
       >
-        <Sidebar 
-          prompt={prompt} 
-          setPrompt={setPrompt} 
-          handleSubmit={handleSubmit} 
+        <Sidebar
+          prompt={prompt}
+          setPrompt={setPrompt}
+          handleSubmit={handleSubmit}
         />
 
         {/* Main Content Area */}
-        <main 
+        <main
           className="flex-1 overflow-y-auto custom-scrollbar"
-          style={{ 
-            height: '100%',
-            padding: 'var(--space-10)',
-            backgroundColor: 'var(--color-bg-base)'
+          style={{
+            height: "100%",
+            padding: "var(--space-10)",
+            backgroundColor: "var(--color-bg-base)",
           }}
         >
-          <div 
+          <div
             className="flex flex-col mx-auto h-full"
-            style={{ 
-              maxWidth: 'var(--max-content-width)',
-              marginBottom: 'var(--space-20)'
+            style={{
+              maxWidth: "var(--max-content-width)",
+              marginBottom: "var(--space-20)",
             }}
           >
             {!isAnalyzed ? (
               <EmptyState />
             ) : (
               <>
-                <UserPrompt />
+                <UserPrompt message={messages?.problem} prompt={prompt} />
 
-                {/* AI Solutions wrapper */}
-                <div 
-                  className="grid grid-cols-2"
-                  style={{ gap: 'var(--space-6)', marginTop: 'var(--space-8)' }}
-                >
-                  <SolutionCard 
-                    title="Solution 1: Distributed Mesh"
-                    subtitle="Edge-optimized stream processing"
-                    score="8/10"
-                    scoreIcon="★"
-                    metricText="High Efficiency"
-                    metricIcon={CheckIcon}
-                    description="Utilizes a combination of Apache Kafka for ingestion and Flink for real-time processing. By deploying processing nodes closer to the data source (Edge), we reduce latency by 40%."
-                    type="success"
-                  />
+                {/* Calculate winner states */}
+                {(() => {
+                  const score1 =
+                    messages?.judge_recommendation?.solution_1_score;
+                  const score2 =
+                    messages?.judge_recommendation?.solution_2_score;
 
-                  <SolutionCard 
-                    title="Solution 2: Centralized Hub"
-                    subtitle="Traditional monolithic architecture"
-                    score="5/10"
-                    scoreIcon="▲"
-                    metricText="Scaling Bottleneck"
-                    metricIcon={AlertIcon}
-                    description="A centralized CloudWatch and Kinesis integration. While simpler to manage, this approach introduces significant serialization overhead and increased costs per message."
-                    type="error"
-                  />
-                </div>
+                  let s1Type = "neutral";
+                  let s2Type = "neutral";
 
-                <VerdictCard />
+                  if (score1 !== undefined && score2 !== undefined) {
+                    if (score1 > score2) {
+                      s1Type = "success";
+                      s2Type = "error";
+                    } else if (score2 > score1) {
+                      s1Type = "error";
+                      s2Type = "success";
+                    }
+                  }
+
+                  return (
+                    <div
+                      className="grid grid-cols-2"
+                      style={{
+                        gap: "var(--space-6)",
+                        marginTop: "var(--space-8)",
+                      }}
+                    >
+                      <SolutionCard
+                        title="Solution 1"
+                        description={messages?.solution_1}
+                        type={s1Type}
+                        isLoading={loading}
+                      />
+
+                      <SolutionCard
+                        title="Solution 2"
+                        description={messages?.solution_2}
+                        type={s2Type}
+                        isLoading={loading}
+                      />
+                    </div>
+                  );
+                })()}
+
+                <VerdictCard
+                  message={messages?.judge_recommendation}
+                  isLoading={loading}
+                />
               </>
             )}
           </div>

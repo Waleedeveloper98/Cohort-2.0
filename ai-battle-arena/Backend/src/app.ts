@@ -1,12 +1,31 @@
 import express from "express"
 import useGraph from "../src/ai/graph.ai.js"
+import cors from "cors"
 
 const app = express()
+app.use(express.json())
+app.use(cors({
+    origin: "http://localhost:5173",
+    methods: ["GET", "POST"],
+    credentials: true
+}))
 
-app.post("/use-graph", async (req, res) => {
-    const result = await useGraph("Can human brain identify real or fake difference?")
+app.post("/invoke", async (req, res) => {
+    const { input } = req.body;
+    console.log("INPUT:", input);
+    if (!input || input.trim() === "") {
+        return res.status(400).json({
+            message: "Input is required",
+            success: false
+        });
+    }
+    const result = await useGraph(input)
 
-    res.json(result)
+    res.status(200).json({
+        message: "Graph executed successfully",
+        success: true,
+        result
+    })
 })
 
 export default app;

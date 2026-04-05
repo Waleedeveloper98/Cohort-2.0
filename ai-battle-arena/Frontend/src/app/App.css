@@ -41,7 +41,7 @@
   --color-warning-border: rgba(243, 156, 18, 0.3);
 
   /* ─── Typography ─────────────────── */
-  --font-family-base: 'Inter', sans-serif;
+  --font-family-base: "Inter", sans-serif;
   --font-weight-regular: 400;
   --font-weight-medium: 500;
   --font-weight-semibold: 600;
@@ -119,4 +119,81 @@ body {
   color: var(--color-text-slate-200);
   background-color: var(--color-bg-base);
   line-height: 1.6;
+}
+
+/* Markdown Reasoning Styles */
+.markdown-reasoning p {
+  margin-bottom: 1em;
+}
+
+.markdown-reasoning ul {
+  list-style-type: disc;
+  padding-left: 1.5em;
+  margin-bottom: 1em;
+}
+
+.markdown-reasoning ol {
+  list-style-type: decimal;
+  padding-left: 1.5em;
+  margin-bottom: 1em;
+}
+
+.markdown-reasoning li {
+  margin-bottom: 0.25em;
+}
+
+.markdown-reasoning h1,
+.markdown-reasoning h2,
+.markdown-reasoning h3,
+.markdown-reasoning h4 {
+  font-weight: bold;
+  margin-top: 1.25em;
+  margin-bottom: 0.5em;
+  color: var(--color-text-slate-100);
+}
+
+.markdown-reasoning a {
+  color: var(--color-primary);
+  text-decoration: underline;
+}
+
+.markdown-reasoning code {
+  background-color: rgba(0,0,0,0.3);
+  padding: 0.2em 0.4em;
+  border-radius: 3px;
+  font-family: monospace;
+}
+
+.markdown-reasoning pre code {
+  background-color: transparent;
+  padding: 0;
+}
+
+/* Shimmer Effect Loader */
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.shimmer {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--color-bg-surface-1);
+  border-radius: var(--radius-md);
+}
+
+.shimmer::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.05),
+    transparent
+  );
+  animation: shimmer 1.5s infinite;
 }
