@@ -8,7 +8,7 @@ app.use(express.static("public"));
 app.use(express.json());
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: ["http://localhost:5173", process.env.FRONTEND_URL || ""],
     methods: ["GET", "POST"],
     credentials: true,
   }),
@@ -32,8 +32,8 @@ app.post("/invoke", async (req, res) => {
   });
 });
 
-app.use("*name", (req, res) => {
-  res.sendFile(path.join(__dirname, "..", "/public/index.html"));
+app.use("*", (req, res) => {
+  res.sendFile(path.join(process.cwd(), "public", "index.html"));
 });
 
 export default app;
