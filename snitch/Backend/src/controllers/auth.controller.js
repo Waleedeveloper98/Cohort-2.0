@@ -16,7 +16,7 @@ const tokenWithResponse = async (user, res, message) => {
             fullName: user.fullName,
             email: user.email,
             contact: user.contact,
-            role: isSeller ? "seller" : "buyer"
+            role: user.isSeller ? "seller" : "buyer"
         }
     })
 }

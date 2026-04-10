@@ -3,66 +3,39 @@ import { Eye, EyeOff, Check } from "lucide-react";
 import { useAuth } from "../hook/useAuth";
 import { useNavigate } from "react-router-dom";
 
-export default function Register() {
+export default function Login() {
   const navigate = useNavigate();
   const [focusedField, setFocusedField] = useState(null);
   const [passwordVisible, setPasswordVisible] = useState(false);
 
   const [formData, setFormData] = useState({
-    fullName: "",
     email: "",
-    contact: "",
     password: "",
-    isSeller: false,
   });
 
   const handleChange = (e) => {
-    const { name, value, checked, type } = e.target;
+    const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: type === "checkbox" ? checked : value,
+      [name]: value,
     }));
   };
 
-  const { handleRegister } = useAuth();
+  const { handleLogin } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    let success = await handleRegister({
-      fullName: formData.fullName,
+    let success = await handleLogin({
       email: formData.email,
-      contact: formData.contact,
       password: formData.password,
-      isSeller: formData.isSeller,
     });
+
     if (success) {
-      navigate("/login");
+      navigate("/");
     }
   };
 
-  const inputFields = [
-    {
-      id: "fullName",
-      label: "FULL NAME",
-      type: "text",
-      placeholder: "John Doe",
-    },
-    {
-      id: "email",
-      label: "EMAIL ADDRESS",
-      type: "email",
-      placeholder: "john@example.com",
-    },
-    {
-      id: "contact",
-      label: "CONTACT NUMBER",
-      type: "tel",
-      placeholder: "+1 (555) 000-0000",
-    },
-  ];
-
-  const imageUrl =
-    "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
+  const imageUrl = "https://plus.unsplash.com/premium_photo-1664202526535-c01e4b0c42b7?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
 
   return (
     <div className="min-h-screen max-h-screen flex flex-col lg:flex-row font-sans">
@@ -102,44 +75,42 @@ export default function Register() {
           <div className=" w-full mx-auto lg:mx-0 max-w-md">
             {/* Heading */}
             <h1 className="text-[#1a1a2e] font-bold text-2xl sm:text-3xl leading-tight tracking-tight mb-1">
-              Create your account
+              Welcome back
             </h1>
             <p className="text-gray-500 text-xs mb-4">
-              Join the Vogue Noir fashion community
+              Log in to your Vogue Noir account
             </p>
 
             {/* Text fields */}
             <form onSubmit={handleSubmit} className="space-y-2.5">
-              {inputFields.map(({ id, label, type, placeholder }) => (
-                <div key={id} className="group">
-                  <label
-                    htmlFor={id}
-                    className={`block text-[9px] font-semibold tracking-[0.16em] mb-1 transition-colors duration-200 ${
-                      focusedField === id ? "text-[#b85c1e]" : "text-gray-400"
-                    }`}
-                  >
-                    {label}
-                  </label>
-                  <div className="relative">
-                    <input
-                      id={id}
-                      name={id}
-                      type={type}
-                      placeholder={placeholder}
-                      onFocus={() => setFocusedField(id)}
-                      onBlur={() => setFocusedField(null)}
-                      value={formData[id]}
-                      onChange={handleChange}
-                      className={`w-full bg-white border rounded-md px-4 py-2 text-sm text-gray-700 placeholder-gray-300 outline-none transition-all duration-200
+              <div className="group">
+                <label
+                  htmlFor={"email"}
+                  className={`block text-[9px] font-semibold tracking-[0.16em] mb-1 transition-colors duration-200 ${
+                    focusedField ? "text-[#b85c1e]" : "text-gray-400"
+                  }`}
+                >
+                  EMAIL ADDRESS
+                </label>
+                <div className="relative">
+                  <input
+                    id={"email"}
+                    name={"email"}
+                    type={"email"}
+                    placeholder={"john@example.com"}
+                    onFocus={() => setFocusedField("email")}
+                    onBlur={() => setFocusedField(null)}
+                    value={formData.email}
+                    onChange={handleChange}
+                    className={`w-full bg-white border rounded-md px-4 py-2 text-sm text-gray-700 placeholder-gray-300 outline-none transition-all duration-200
                         ${
-                          focusedField === id
+                          focusedField === "email"
                             ? "border-[#b85c1e] shadow-[0_0_0_3px_rgba(184,92,30,0.12)]"
                             : "border-gray-200 hover:border-gray-300"
                         }`}
-                    />
-                  </div>
+                  />
                 </div>
-              ))}
+              </div>
 
               {/* Password field */}
               <div className="group">
@@ -187,38 +158,7 @@ export default function Register() {
                 </div>
               </div>
 
-              {/* Seller checkbox */}
-              <label className="flex items-center gap-3 cursor-pointer group select-none mt-1">
-                <button
-                  type="button"
-                  role="checkbox"
-                  aria-checked={formData.isSeller}
-                  onClick={() =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      isSeller: !prev.isSeller,
-                    }))
-                  }
-                  className={`w-5 h-5 rounded flex-shrink-0 border-2 flex items-center justify-center transition-all duration-200 cursor-pointer
-                    ${
-                      formData.isSeller
-                        ? "bg-[#b85c1e] border-[#b85c1e] scale-105"
-                        : "bg-white border-gray-300 group-hover:border-[#b85c1e]"
-                    }`}
-                >
-                  <Check
-                    className={`w-3 h-3 text-white transition-all duration-150 ${
-                      formData.isSeller
-                        ? "opacity-100 scale-100"
-                        : "opacity-0 scale-75"
-                    }`}
-                  />
-                </button>
-                <span className="text-sm text-gray-600 group-hover:text-gray-800 transition-colors duration-150">
-                  I want to register as a seller
-                </span>
-              </label>
-              {/* Sign Up button */}
+              {/* Login button */}
               <button
                 type="submit"
                 className="mt-4 w-full bg-[#b85c1e] text-white font-semibold text-sm tracking-wide py-2.5 rounded-md cursor-pointer
@@ -227,7 +167,7 @@ export default function Register() {
                 active:scale-[0.98] active:shadow-none active:translate-y-0
                 focus:outline-none focus:ring-2 focus:ring-[#b85c1e]/50"
               >
-                Sign Up
+                Log In
               </button>
             </form>
 
@@ -276,13 +216,13 @@ export default function Register() {
 
             {/* Login link */}
             <p className="text-center text-xs text-gray-500 mt-4">
-              Already have an account?{" "}
+              Create an account?{" "}
               <a
-                onClick={() => navigate("/login")}
+                onClick={() => navigate("/register")}
                 href="#"
                 className="text-[#b85c1e] font-medium hover:underline hover:text-[#a04e18] transition-colors duration-150"
               >
-                Log in
+                Sign Up
               </a>
             </p>
           </div>
