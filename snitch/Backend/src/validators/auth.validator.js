@@ -1,10 +1,11 @@
 import { body, validationResult } from "express-validator";
 
-export const validator = async (req, res, next) => {
+export const validator = (req, res, next) => {
     const errors = validationResult(req)
 
     if (!errors.isEmpty()) {
         return res.status(400).json({
+            success: false,
             errors: errors.array()
         })
     }
@@ -28,6 +29,18 @@ export const validateRegisterUser = [
         .withMessage("Password is required")
         .isLength({ min: 6 })
         .withMessage("Password must be greater than 6 characters long"),
+    body("isSeller")
+        .isBoolean().withMessage("isSeller must be a boolean"),
 
+    validator
+]
+
+export const validateLoginUser = [
+    body("email")
+        .isEmail()
+        .withMessage("Enter valid email format"),
+    body("password")
+        .notEmpty()
+        .withMessage("Password is required"),
     validator
 ]
