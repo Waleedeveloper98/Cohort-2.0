@@ -1,10 +1,14 @@
-import React from 'react'
-import "./App.css"
+import React from "react";
+import "./App.css";
+import { RouterProvider } from "react-router-dom";
+import router from "./app.routes";
 
 const App = () => {
   return (
-    <div>App</div>
-  )
-}
+    <>
+      <RouterProvider router={router} />
+    </>
+  );
+};
 
-export default App
+export default App;
