@@ -241,8 +241,8 @@ export default function Register() {
             </div>
 
             {/* Google button */}
-            <button
-              type="button"
+            <a
+              href="/api/auth/google"
               className="w-full bg-white border border-gray-200 text-gray-700 font-medium text-sm py-2.5 rounded-md flex items-center justify-center gap-3 cursor-pointer
                 transition-all duration-200 hover:border-gray-300 hover:shadow-md hover:-translate-y-0.5
                 active:scale-[0.98] active:shadow-none active:translate-y-0
@@ -272,7 +272,7 @@ export default function Register() {
                 />
               </svg>
               Google
-            </button>
+            </a>
 
             {/* Login link */}
             <p className="text-center text-xs text-gray-500 mt-4">
