@@ -85,5 +85,19 @@ export const login = async (req, res) => {
 
 export const googleCallback = async (req, res) => {
     console.log(req.user)
+    const { id, displayName, emails, photos } = req.user
+
+    const email = emails[0].value;
+
+    let user = await userModel.findOne({ email })
+
+    if (!user) {
+        user = await userModel.create({
+            email,
+            fullName: displayName,
+            password: id,
+        })
+    }
+
     res.redirect("http://localhost:5173/")
 }
