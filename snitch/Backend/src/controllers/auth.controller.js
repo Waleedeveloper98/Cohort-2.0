@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken"
 const tokenWithResponse = async (user, res, message) => {
     const token = jwt.sign({
         id: user._id,
+        role: user.role,
     }, config.JWT_SECRET, { expiresIn: "7d" })
 
     res.cookie("token", token)
@@ -41,7 +42,7 @@ export const register = async (req, res) => {
             fullName,
             email,
             contact,
-            password
+            password,
         })
 
         await tokenWithResponse(user, res, "User registered successfully")
