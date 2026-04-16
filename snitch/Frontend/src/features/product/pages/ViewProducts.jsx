@@ -11,9 +11,7 @@ const ViewProducts = () => {
 
   useEffect(() => {
     handleGetSellerProducts();
-  }, [sellerProducts]);
-
-  console.log(sellerProducts);
+  }, []);
 
   return (
     <div className="min-h-screen bg-[#f9f9f9] text-[#1a1c1c] font-sans pb-12">
