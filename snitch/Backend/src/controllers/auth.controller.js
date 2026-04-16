@@ -17,14 +17,14 @@ const tokenWithResponse = async (user, res, message) => {
             fullName: user.fullName,
             email: user.email,
             contact: user.contact,
-            role: user.isSeller ? "seller" : "buyer"
+            role: user.role
         }
     })
 }
 
 export const register = async (req, res) => {
     try {
-        const { fullName, email, contact, password } = req.body
+        const { fullName, email, contact, password, isSeller } = req.body
         const isUserExists = await userModel.findOne({
             $or: [
                 { email },
@@ -43,6 +43,7 @@ export const register = async (req, res) => {
             email,
             contact,
             password,
+            role: isSeller ? "seller" : "buyer"
         })
 
         await tokenWithResponse(user, res, "User registered successfully")
@@ -76,6 +77,26 @@ export const login = async (req, res) => {
         }
 
         await tokenWithResponse(user, res, "User logged in successfully")
+    } catch (error) {
+        console.log("Error: ", error)
+        return res.status(500).json({
+            message: error.message
+        })
+    }
+}
+
+export const getMe = async (req, res) => {
+    try {
+        const user = await userModel.findById(req.user.id)
+        res.status(200).json({
+            success: true,
+            user:{
+                fullName: user.fullName,
+                email: user.email,
+                contact: user.contact,
+                role: user.role
+            }
+        })
     } catch (error) {
         console.log("Error: ", error)
         return res.status(500).json({

@@ -14,3 +14,8 @@ export const login = async ({ email, password }) => {
     const response = await apiInstance.post("/login", { email, password })
     return response.data
 }
+
+export const getMe = async () => {
+    const response = await apiInstance.get("/getMe");
+    return response.data
+}

@@ -31,7 +31,7 @@ export default function Login() {
     });
 
     if (success) {
-      navigate("/");
+      navigate("/seller/create");
     }
   };
 

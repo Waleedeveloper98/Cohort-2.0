@@ -2,11 +2,14 @@ import { createBrowserRouter } from "react-router-dom";
 import Register from "../features/auth/pages/Register";
 import Login from "../features/auth/pages/Login";
 import CreateProduct from "../features/product/pages/CreateProduct";
+import Home from "./Home";
+import Protected from "./Protected";
+import ViewProducts from "../features/product/pages/ViewProducts";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <h1>Welcome to the app</h1>,
+    element: <Home />,
   },
   {
     path: "/register",
@@ -18,7 +21,15 @@ const router = createBrowserRouter([
   },
   {
     path: "/seller/create",
-    element: <CreateProduct />,
+    element: (
+      <Protected>
+        <CreateProduct />
+      </Protected>
+    ),
+  },
+  {
+    path: "/seller/products",
+    element: <ViewProducts />,
   },
 ]);
 
