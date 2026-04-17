@@ -2,10 +2,11 @@ import { createBrowserRouter } from "react-router-dom";
 import Register from "../features/auth/pages/Register";
 import Login from "../features/auth/pages/Login";
 import CreateProduct from "../features/product/pages/CreateProduct";
-import Home from "./Home";
 import Protected from "../features/auth/components/Protected";
 import Dashboard from "../features/product/pages/Dashboard";
 import Layout from "./Layout";
+import Home from "../features/product/pages/Home";
+import ProductDetails from "../features/product/components/ProductDetails";
 
 const router = createBrowserRouter([
   {
@@ -15,6 +16,10 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <Home />,
+      },
+      {
+        path: "products/:id",
+        element: <ProductDetails />,
       },
       {
         path: "/seller",
