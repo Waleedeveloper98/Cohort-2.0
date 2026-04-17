@@ -3,10 +3,42 @@ import Register from "../features/auth/pages/Register";
 import Login from "../features/auth/pages/Login";
 import CreateProduct from "../features/product/pages/CreateProduct";
 import Home from "./Home";
-import Protected from "./Protected";
-import ViewProducts from "../features/product/pages/ViewProducts";
+import Protected from "../features/auth/components/Protected";
+import Dashboard from "../features/product/pages/Dashboard";
+import Layout from "./Layout";
 
 const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Layout />,
+    children: [
+      {
+        index: true,
+        element: <Home />,
+      },
+      {
+        path: "/seller",
+        children: [
+          {
+            path: "create",
+            element: (
+              <Protected role="seller">
+                <CreateProduct />
+              </Protected>
+            ),
+          },
+          {
+            path: "dashboard",
+            element: (
+              <Protected role="seller">
+                <Dashboard />
+              </Protected>
+            ),
+          },
+        ],
+      },
+    ],
+  },
   {
     path: "/",
     element: <Home />,
@@ -18,18 +50,6 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <Login />,
-  },
-  {
-    path: "/seller/create",
-    element: (
-      <Protected>
-        <CreateProduct />
-      </Protected>
-    ),
-  },
-  {
-    path: "/seller/products",
-    element: <ViewProducts />,
   },
 ]);
 

@@ -2,12 +2,12 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 
-const Protected = ({ children }) => {
+const Protected = ({ children, role = "buyer" }) => {
   const { user, loading } = useSelector((state) => state.auth);
   if (loading) {
     return <div>Loading...</div>;
   }
-  if (!user || user.role !== "seller") {
+  if (!user || user.role !== role) {
     return <Navigate to="/" />;
   }
   return <div>{children}</div>;

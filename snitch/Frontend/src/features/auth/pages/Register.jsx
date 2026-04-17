@@ -28,16 +28,14 @@ export default function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    let success = await handleRegister({
+    await handleRegister({
       fullName: formData.fullName,
       email: formData.email,
       contact: formData.contact,
       password: formData.password,
       isSeller: formData.isSeller,
     });
-    if (success) {
       navigate("/login");
-    }
   };
 
   const inputFields = [

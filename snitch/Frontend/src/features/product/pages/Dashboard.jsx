@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useProduct } from "../hook/useProduct";
 
-const ViewProducts = () => {
+const Dashboard = () => {
   const navigate = useNavigate();
   const { sellerProducts } = useSelector((state) => state.product);
   const { handleGetSellerProducts } = useProduct();
@@ -103,4 +103,4 @@ const ViewProducts = () => {
   );
 };
 
-export default ViewProducts;
+export default Dashboard;
