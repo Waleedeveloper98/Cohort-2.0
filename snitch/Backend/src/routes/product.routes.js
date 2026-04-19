@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createProduct, getAllProducts, getProductDetails, getSellerProducts } from "../controllers/product.controller.js";
+import { createProduct, createProductVariant, getAllProducts, getProductDetails, getSellerProducts } from "../controllers/product.controller.js";
 import multer, { memoryStorage } from "multer"
 import { sellerAuthValidator } from "../middlewares/sellerAuth.middleware.js";
 
@@ -35,5 +35,8 @@ productRouter.get("/detail/:id", getProductDetails)
  *@access Private (Seller)
  */
 productRouter.get("/", sellerAuthValidator, getSellerProducts)
+
+
+productRouter.post("/:productId/variants", sellerAuthValidator, upload.array("images", 5), createProductVariant)
 
 export default productRouter

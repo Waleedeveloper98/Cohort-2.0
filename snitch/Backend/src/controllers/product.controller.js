@@ -64,3 +64,47 @@ export const getProductDetails = async (req, res) => {
         product
     })
 }
+
+
+export const createProductVariant = async (req, res) => {
+    const { productId } = req.params;
+    const { stock, amount, currency, attributes } = req.body
+
+    const product = await productModel.findOne({
+        _id: productId,
+        seller: req.user._id
+    })
+
+    if (!product) {
+        return res.status(404).json({
+            message: "Product not found"
+        })
+    }
+
+    const images = await Promise.all(req.files.map(async (file) => {
+        return await uploadFile({
+            buffer: file.buffer,
+            fileName: file.originalname
+        })
+    }))
+
+    const variant = {
+        stock,
+        price: {
+            amount,
+            currency,
+        },
+        attributes: JSON.parse(attributes) || {},
+        images
+    }
+
+    product.variants.push(variant)
+    await product.save()
+
+    return res.status(201).json({
+        message: "Product variant created successfully",
+        variant
+    })
+
+
+}
