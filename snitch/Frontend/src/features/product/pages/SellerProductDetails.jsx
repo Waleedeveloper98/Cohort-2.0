@@ -397,7 +397,7 @@ const SellerProductDetails = () => {
           {/* Table Container */}
           {!isAddingVariant && (
             <div className="bg-white rounded-xl shadow-[0_4px_24px_rgba(0,0,0,0.04)] overflow-hidden border border-slate-100">
-              {variants.length === 0 ? (
+              {singleProduct?.variants.length === 0 ? (
                 <div className="py-24 flex flex-col items-center justify-center text-center">
                   <div className="w-16 h-16 mb-4 rounded-full bg-slate-50 flex items-center justify-center border border-slate-100">
                     <span className="text-2xl opacity-50">👟</span>
@@ -434,7 +434,7 @@ const SellerProductDetails = () => {
 
                   {/* Table Body */}
                   <div className="divide-y divide-slate-100">
-                    {variants.map((v, renderIndex) => (
+                    {singleProduct?.variants.map((v, renderIndex) => (
                       <div
                         key={v._id || renderIndex}
                         className="grid grid-cols-5 items-center px-8 py-6 group hover:bg-slate-50 transition-colors"
