@@ -7,6 +7,7 @@ import Dashboard from "../features/product/pages/Dashboard";
 import Layout from "./Layout";
 import Home from "../features/product/pages/Home";
 import ProductDetails from "../features/product/components/ProductDetails";
+import SellerProductDetails from "../features/product/pages/SellerProductDetails";
 
 const router = createBrowserRouter([
   {
@@ -37,6 +38,14 @@ const router = createBrowserRouter([
             element: (
               <Protected role="seller">
                 <Dashboard />
+              </Protected>
+            ),
+          },
+          {
+            path: "variants/:id",
+            element: (
+              <Protected role="seller">
+                <SellerProductDetails />
               </Protected>
             ),
           },

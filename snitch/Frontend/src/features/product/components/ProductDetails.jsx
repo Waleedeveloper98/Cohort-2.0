@@ -8,8 +8,8 @@ import { useProduct } from "../hook/useProduct";
 
 const ProductDetails = () => {
   const { id } = useParams();
-  const navigate = useNavigate();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const singleProduct = useSelector((state) => state.product.singleProduct);
   const loading = useSelector((state) => state.product.loading);
   const user = useSelector((state) => state.auth.user);
@@ -17,6 +17,7 @@ const ProductDetails = () => {
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const { handleGetSingleProduct } = useProduct();
 
+  console.log(singleProduct)
   useEffect(() => {
     if (!singleProduct || singleProduct._id !== id) {
       handleGetSingleProduct({ id });

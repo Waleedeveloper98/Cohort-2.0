@@ -81,12 +81,18 @@ export const createProductVariant = async (req, res) => {
         })
     }
 
-    const images = await Promise.all(req.files.map(async (file) => {
-        return await uploadFile({
-            buffer: file.buffer,
-            fileName: file.originalname
-        })
-    }))
+    let images = [];
+
+    if (req.files && req.files.length > 0) {
+        images = await Promise.all(
+            req.files.map(async (file) => {
+                return await uploadFile({
+                    buffer: file.buffer,
+                    fileName: file.originalname,
+                });
+            })
+        );
+    }
 
     const variant = {
         stock,
@@ -103,7 +109,12 @@ export const createProductVariant = async (req, res) => {
 
     return res.status(201).json({
         message: "Product variant created successfully",
-        variant
+        variant: {
+            stock: variant.stock,
+            price: variant.price,
+            attributes: variant.attributes,
+            images: variant.images.map(image => image.url)
+        }
     })
 
 

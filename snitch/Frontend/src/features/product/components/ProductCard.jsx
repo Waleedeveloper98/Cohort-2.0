@@ -6,6 +6,7 @@ import { useProduct } from "../hook/useProduct";
 const ProductCard = ({ product }) => {
   const { title, price } = product;
   const { id } = useParams();
+  const navigate = useNavigate();
 
   return (
     <div className="group relative flex w-full max-w-75 flex-col overflow-hidden rounded-lg bg-white transition-all duration-500 hover:shadow-[0_20px_50px_rgba(0,0,0,0.1)]">
@@ -33,13 +34,13 @@ const ProductCard = ({ product }) => {
           </p>
 
           {/* Action Button */}
-          <Link
-            to={`/products/${product._id}`}
+          <button
+            onClick={() => navigate(`/products/${product._id}`)}
             className="relative cursor-pointer flex items-center gap-2 overflow-hidden rounded-full bg-slate-900 px-4 py-2 text-xs font-medium text-white transition-all duration-300 hover:bg-black active:scale-95"
           >
             <span className="relative z-10">View Details</span>
             <Eye size={14} className="relative z-10" />
-          </Link>
+          </button>
         </div>
       </div>
 
