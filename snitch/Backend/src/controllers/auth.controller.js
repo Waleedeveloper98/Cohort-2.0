@@ -106,7 +106,6 @@ export const getMe = async (req, res) => {
 }
 
 export const googleCallback = async (req, res) => {
-    console.log(req.user)
     const { id, displayName, emails, photos } = req.user
 
     const email = emails[0].value;

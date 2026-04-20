@@ -28,8 +28,6 @@ export const getSingleProduct = async ({ id }) => {
 
 export const addProductVariant = async ({ productId, variantData }) => {
 
-    console.log("Variant data received in service function:", variantData);
-
     const formData = new FormData();
     formData.append("stock", variantData.stock);
     formData.append("amount", variantData.price);
