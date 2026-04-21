@@ -19,16 +19,17 @@ export const addToCart = async (req, res) => {
 
     const cart = (await cartModel.findOne({ user: req.user.id })) || (await cartModel.create({ user: req.user.id }))
 
-    const isProductInCart = cart.items.find(item => item.product.toString() === productId && item?.variant.toString() === variantId)
+
+    const isProductInCart = cart.items.find(item => item.product._id.toString() === productId && item?.variant._id.toString() === variantId)
 
     if (isProductInCart) {
-        const quantityInCart = cart.items.find(item => item.product.toString() === productId && item?.variant.toString() === variantId)?.quantity;
+        const quantityInCart = cart.items.find(item => item.product._id.toString() === productId && item?.variant._id.toString() === variantId)?.quantity;
         if (quantityInCart + quantity > stock) {
             return res.status(400).json({ message: "Not enough stock available" })
         }
 
         await cartModel.findOneAndUpdate({
-            user: req.user._id,
+            user: req.user.id,
             "items.product": productId,
             "items.variant": variantId
         }, {
