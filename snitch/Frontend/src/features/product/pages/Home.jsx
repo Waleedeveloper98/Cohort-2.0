@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import ProductCard from "../components/ProductCard";
 import { useSelector } from "react-redux";
 import { useProduct } from "../hook/useProduct";
+import Search from "../components/Search";
 
 const Home = () => {
   const products = useSelector((state) => state.product.products);
@@ -23,6 +24,8 @@ const Home = () => {
             Explore a curated collection of clean, timeless pieces with subtle
             polish and thoughtful comfort.
           </p>
+
+          <Search />
         </header>
 
         <section className="space-y-6 px-4">

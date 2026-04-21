@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createProduct, createProductVariant, getAllProducts, getProductDetails, getSellerProducts } from "../controllers/product.controller.js";
+import { createProduct, createProductVariant, getAllProducts, getProductDetails, getSellerProducts, searchProducts } from "../controllers/product.controller.js";
 import multer, { memoryStorage } from "multer"
 import { sellerAuthValidator } from "../middlewares/sellerAuth.middleware.js";
 
@@ -38,5 +38,12 @@ productRouter.get("/", sellerAuthValidator, getSellerProducts)
 
 
 productRouter.post("/:productId/variants", sellerAuthValidator, upload.array("images", 5), createProductVariant)
+
+/**
+ *@route /api/search
+ * @desc Search for products (Public)
+ * @access Public
+ */
+productRouter.get("/search", searchProducts)
 
 export default productRouter

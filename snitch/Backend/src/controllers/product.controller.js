@@ -119,3 +119,19 @@ export const createProductVariant = async (req, res) => {
 
 
 }
+
+
+export const searchProducts = async (req, res) => {
+    const { query } = req.query;
+
+    const products = await productModel.find({
+        $text: {
+            $search: query
+        }
+    })
+
+    return res.status(200).json({
+        message: "Products fetched successfully",
+        products
+    })
+}
