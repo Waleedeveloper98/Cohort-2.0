@@ -2,9 +2,10 @@ import React, { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getSingleProduct } from "../service/product.service";
+import { getSingleProduct } from "../service/product.api";
 import { setSingleProduct } from "../state/product.slice";
 import { useProduct } from "../hook/useProduct";
+import { useCart } from "../../cart/hook/useCart";
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -18,6 +19,7 @@ const ProductDetails = () => {
   const [selectedVariant, setSelectedVariant] = useState(null);
   const [selectedAttributes, setSelectedAttributes] = useState({});
   const { handleGetSingleProduct } = useProduct();
+  const { handleAddToCart } = useCart();
 
   useEffect(() => {
     if (!singleProduct || singleProduct._id !== id) {
@@ -40,7 +42,9 @@ const ProductDetails = () => {
 
   useEffect(() => {
     if (selectedVariant?.images?.length > 0) {
-      setActiveImage(selectedVariant.images[0].url || selectedVariant.images[0]);
+      setActiveImage(
+        selectedVariant.images[0].url || selectedVariant.images[0],
+      );
       setActiveImageIndex(0);
     }
   }, [selectedVariant]);
@@ -49,7 +53,7 @@ const ProductDetails = () => {
   const variants = singleProduct?.variants || [];
   const availableAttributes = React.useMemo(() => {
     const attrs = {};
-    variants.forEach(variant => {
+    variants.forEach((variant) => {
       Object.entries(variant.attributes || {}).forEach(([key, value]) => {
         if (!attrs[key]) attrs[key] = new Set();
         attrs[key].add(value);
@@ -67,14 +71,16 @@ const ProductDetails = () => {
     const newSelectedAttributes = { ...selectedAttributes, [key]: value };
 
     // Find a variant that matches all newly selected attributes
-    let matchingVariant = variants.find(v => {
-      return Object.entries(newSelectedAttributes).every(([k, vValue]) => v.attributes?.[k] === vValue);
+    let matchingVariant = variants.find((v) => {
+      return Object.entries(newSelectedAttributes).every(
+        ([k, vValue]) => v.attributes?.[k] === vValue,
+      );
     });
 
-    // If the exact combination doesn't exist, fall back to the first variant 
+    // If the exact combination doesn't exist, fall back to the first variant
     // that at least matches the attribute the user just clicked
     if (!matchingVariant) {
-      matchingVariant = variants.find(v => v.attributes?.[key] === value);
+      matchingVariant = variants.find((v) => v.attributes?.[key] === value);
     }
 
     if (matchingVariant) {
@@ -101,16 +107,14 @@ const ProductDetails = () => {
     );
   }
 
-  const {
-    title = "",
-    description = "",
-  } = singleProduct;
+  const { title = "", description = "" } = singleProduct;
 
   const basePrice = singleProduct.price || { currency: "", amount: 0 };
   const baseImages = singleProduct.images || [];
 
   const displayPrice = selectedVariant?.price || basePrice;
-  const displayImages = selectedVariant?.images?.length > 0 ? selectedVariant.images : baseImages;
+  const displayImages =
+    selectedVariant?.images?.length > 0 ? selectedVariant.images : baseImages;
 
   const handleThumbnailClick = (imageUrl, index) => {
     setActiveImage(imageUrl.url || imageUrl);
@@ -118,7 +122,8 @@ const ProductDetails = () => {
   };
 
   const handlePreviousImage = () => {
-    const newIndex = (activeImageIndex - 1 + displayImages.length) % displayImages.length;
+    const newIndex =
+      (activeImageIndex - 1 + displayImages.length) % displayImages.length;
     setActiveImage(displayImages[newIndex].url || displayImages[newIndex]);
     setActiveImageIndex(newIndex);
   };
@@ -129,10 +134,14 @@ const ProductDetails = () => {
     setActiveImageIndex(newIndex);
   };
 
-  const handleBuyNow = () => {
+  const handleBuyNow = async (variant) => {
     if (!user) {
       navigate("/login");
     }
+    await handleAddToCart({
+      productId: singleProduct._id,
+      variantId: variant._id,
+    });
   };
 
   return (
@@ -145,7 +154,10 @@ const ProductDetails = () => {
             <div className="relative group overflow-hidden bg-white rounded-2xl shadow-xl border border-slate-200">
               <img
                 src={
-                  activeImage || (displayImages[0]?.url || displayImages[0]) || "/api/placeholder/400/500"
+                  activeImage ||
+                  displayImages[0]?.url ||
+                  displayImages[0] ||
+                  "/api/placeholder/400/500"
                 }
                 alt={title}
                 className="w-full h-[350px] lg:h-[450px] object-cover transition-transform duration-700 ease-out group-hover:scale-105"
@@ -224,33 +236,37 @@ const ProductDetails = () => {
                 {/* Attributes Section */}
                 {Object.keys(availableAttributes).length > 0 && (
                   <div className="space-y-4 py-4 border-t border-slate-200">
-                    {Object.entries(availableAttributes).map(([key, values]) => (
-                      <div key={key} className="space-y-2">
-                        <span className="text-sm font-semibold text-slate-900 uppercase tracking-wide">
-                          {key}
-                        </span>
-                        <div className="flex flex-wrap gap-2">
-                          {values.map((value) => (
-                            <button
-                              key={value}
-                              onClick={() => handleAttributeSelect(key, value)}
-                              className={`px-4 py-2 text-sm font-medium rounded-lg border transition-all duration-200 ${
-                                selectedAttributes[key] === value
-                                  ? "bg-slate-900 text-white border-slate-900 shadow-md"
-                                  : "bg-white text-slate-700 border-slate-300 hover:border-slate-900 hover:bg-slate-50"
-                              }`}
-                            >
-                              {value}
-                            </button>
-                          ))}
+                    {Object.entries(availableAttributes).map(
+                      ([key, values]) => (
+                        <div key={key} className="space-y-2">
+                          <span className="text-sm font-semibold text-slate-900 uppercase tracking-wide">
+                            {key}
+                          </span>
+                          <div className="flex flex-wrap gap-2">
+                            {values.map((value) => (
+                              <button
+                                key={value}
+                                onClick={() =>
+                                  handleAttributeSelect(key, value)
+                                }
+                                className={`px-4 py-2 text-sm font-medium rounded-lg border transition-all duration-200 ${
+                                  selectedAttributes[key] === value
+                                    ? "bg-slate-900 text-white border-slate-900 shadow-md"
+                                    : "bg-white text-slate-700 border-slate-300 hover:border-slate-900 hover:bg-slate-50"
+                                }`}
+                              >
+                                {value}
+                              </button>
+                            ))}
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      ),
+                    )}
                   </div>
                 )}
 
                 <button
-                  onClick={handleBuyNow}
+                  onClick={() => handleBuyNow(selectedVariant || singleProduct)}
                   className="w-full cursor-pointer bg-gradient-to-r from-slate-900 to-slate-800 text-white py-4 px-6 rounded-xl text-base font-semibold uppercase tracking-wider hover:from-slate-800 hover:to-slate-700 transition-all duration-300 active:scale-[0.98] shadow-xl hover:shadow-2xl"
                 >
                   Buy It Now

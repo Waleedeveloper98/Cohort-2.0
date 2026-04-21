@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux"
 import { setSellerProducts, addProduct, setProducts, setSingleProduct, setLoading } from "../state/product.slice";
-import { addProductVariant, createProduct, getAllProducts, getSellerProducts, getSingleProduct } from "../service/product.service";
+import { addProductVariant, createProduct, getAllProducts, getSellerProducts, getSingleProduct } from "../service/product.api";
 
 export const useProduct = () => {
     const dispatch = useDispatch();

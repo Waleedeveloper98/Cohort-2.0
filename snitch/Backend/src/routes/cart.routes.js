@@ -7,7 +7,6 @@ const cartRouter = Router();
 
 cartRouter.post("/add/:productId/:variantId", authValidation, cartValidation, addToCart);
 
-
 cartRouter.get("/", authValidation, getCart);
 
 export default cartRouter;

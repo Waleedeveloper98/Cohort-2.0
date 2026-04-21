@@ -17,7 +17,7 @@ export const addToCart = async (req, res) => {
 
     const stock = await stockOfVariant(productId, variantId)
 
-    const cart = (await cartModel.findOne({ user: req.user._id })) || (await cartModel.create({ user: req.user._id }))
+    const cart = (await cartModel.findOne({ user: req.user.id })) || (await cartModel.create({ user: req.user.id }))
 
     const isProductInCart = cart.items.find(item => item.product.toString() === productId && item?.variant.toString() === variantId)
 
@@ -57,10 +57,10 @@ export const addToCart = async (req, res) => {
 
 
 export const getCart = async (req, res) => {
-    const cart = await cartModel.findOne({ user: req.user._id }).populate("items.product").populate("items.variant")
+    const cart = await cartModel.findOne({ user: req.user.id }).populate("items.product").populate("items.variant")
 
     if (!cart) {
-        await cartModel.create({ user: req.user._id })
+        await cartModel.create({ user: req.user.id })
     }
 
     return res.status(200).json({
