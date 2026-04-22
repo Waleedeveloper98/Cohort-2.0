@@ -30,6 +30,11 @@ const ProductDetails = () => {
   useEffect(() => {
     if (singleProduct?.variants?.length > 0) {
       const initialVariant = singleProduct.variants[0];
+      setSelectedVariant(initialVariant);
+      setSelectedAttributes(initialVariant.attributes || {});
+    } else {
+      setSelectedVariant(null);
+      setSelectedAttributes({});
     }
 
     if (singleProduct?.images?.length) {

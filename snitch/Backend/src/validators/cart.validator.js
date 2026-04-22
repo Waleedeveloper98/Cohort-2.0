@@ -26,3 +26,14 @@ export const cartValidation = [
         .withMessage("Quantity must be a positive integer"),
     validator
 ]
+
+export const incrementValidation = [
+    param("productId")
+        .isMongoId()
+        .withMessage("Invalid product ID format"),
+    param("variantId")
+        .optional()
+        .isMongoId()
+        .withMessage("Invalid variant ID format"),
+    validator
+]
