@@ -1,15 +1,37 @@
 import React, { useEffect } from "react";
-import { Plus, Minus } from "lucide-react";
+import { Plus, Minus, DeleteIcon } from "lucide-react";
 import { useCart } from "../hook/useCart";
 import { useSelector } from "react-redux";
 
 const Cart = () => {
-  const { handleGetCart, handleIncrementQuantityInCart } = useCart();
+  const {
+    handleGetCart,
+    handleIncrementQuantityInCart,
+    handleDecrementQuantityInCart,
+    handleDeleteCartItem,
+  } = useCart();
   const items = useSelector((state) => state.cart.items);
 
   useEffect(() => {
     handleGetCart();
   }, []);
+
+  const handleDecrement = (item) => {
+    if (item?.quantity <= 1) {
+      handleDeleteCartItem({
+        productId: item.product._id,
+        variantId:
+          typeof item.variant === "string" ? item.variant : item.variant?._id,
+      });
+      return;
+    } else {
+      handleDecrementQuantityInCart({
+        productId: item.product._id,
+        variantId:
+          typeof item.variant === "string" ? item.variant : item.variant?._id,
+      });
+    }
+  };
 
   // Calculate totals
   const subtotalAmount = (items || []).reduce((acc, item) => {
@@ -80,7 +102,7 @@ const Cart = () => {
                 return (
                   <div
                     key={item._id || idx}
-                    className="flex flex-col sm:flex-row items-start sm:items-center gap-6 md:gap-10 pb-8 group border-b border-[#dec0b5]/10 last:border-0 last:pb-0"
+                    className="relative flex flex-col sm:flex-row items-start sm:items-center gap-6 md:gap-10 pb-8 group border-b border-[#dec0b5]/10 last:border-0 last:pb-0"
                   >
                     <div className="w-24 h-32 md:w-32 md:h-40 overflow-hidden bg-[#e8eff0] flex-shrink-0">
                       <img
@@ -107,7 +129,10 @@ const Cart = () => {
                       </p>
                     </div>
                     <div className="flex items-center gap-4 bg-[#eef5f6] px-4 py-2 rounded-xl mt-4 sm:mt-0">
-                      <button className="text-[#c05621] hover:scale-110 transition-transform flex items-center justify-center cursor-pointer">
+                      <button
+                        onClick={() => handleDecrement(item)}
+                        className="text-[#c05621] hover:scale-110 transition-transform flex items-center justify-center cursor-pointer"
+                      >
                         <Minus size={18} />
                       </button>
                       <span className="font-sans font-bold text-[#161d1e] w-4 text-center">
@@ -126,6 +151,20 @@ const Cart = () => {
                         className="text-[#c05621] hover:scale-110 transition-transform flex items-center justify-center cursor-pointer"
                       >
                         <Plus size={18} />
+                      </button>
+                      <button
+                        onClick={() =>
+                          handleDeleteCartItem({
+                            productId: item.product._id,
+                            variantId:
+                              typeof item.variant === "string"
+                                ? item.variant
+                                : item.variant?._id,
+                          })
+                        }
+                        className="absolute top-1 right-1 cursor-pointer bg-red-500 px-2 py-1 rounded"
+                      >
+                        <DeleteIcon size={18} className="text-white"/>
                       </button>
                     </div>
                   </div>

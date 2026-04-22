@@ -20,3 +20,13 @@ export const incrementQuantityInCart = async ({ productId, variantId }) => {
     const response = await axiosApiInstance.patch(`/update/quantity/increment/${productId}/${variantId}`)
     return response.data
 }
+
+export const decrementQuantityInCart = async ({ productId, variantId }) => {
+    const response = await axiosApiInstance.patch(`/update/quantity/decrement/${productId}/${variantId}`)
+    return response.data
+}
+
+export const deleteCartItem = async ({ productId, variantId }) => {
+    const response = await axiosApiInstance.delete(`/delete/${productId}/${variantId}`)
+    return response.data
+}

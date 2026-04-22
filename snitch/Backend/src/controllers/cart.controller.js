@@ -122,7 +122,64 @@ export const updateQuantityIncrement = async (req, res) => {
         $inc: { "items.$.quantity": 1 }
     }, { new: true })
 
-    return res.status(200).json({ message: "Cart updated successfully" })
+    return res.status(200).json({ message: "Cart quantity increment successfully" })
+}
+
+export const updateQuantityDecrement = async (req, res) => {
+    const { productId, variantId } = req.params;
+
+    const product = await productModel.findOne({
+        _id: productId,
+        "variants._id": variantId
+    })
+
+    if (!product) {
+        return res.status(404).json({
+            message: "Product not found"
+        })
+    }
+
+    const cart = await cartModel.findOne({ user: req.user.id })
+
+    const itemQuantity = cart.items.find(item => item.product._id === productId && item.variant._id === variantId)?.quantity;
+
+    if (itemQuantity - 1 <= 0) {
+        return res.status(400).json({
+            message: "quantity must be greater than 0"
+        })
+    }
+    await cartModel.findOneAndUpdate({
+        user: req.user.id,
+        "items.product": productId,
+        "items.variant": variantId,
+    }, {
+        $inc: { "items.$.quantity": -1 }
+    }, { new: true })
+    return res.status(200).json({ message: "Cart quantity decrement successfully" })
+
+}
+
+
+export const deleteCartItem = async (req, res) => {
+    const { productId, variantId } = req.params
+
+
+    await cartModel.findOneAndUpdate(
+        { user: req.user.id },
+        {
+            $pull: {
+                items: {
+                    product: productId,
+                    variant: variantId
+                }
+            }
+        },
+        { new: true }
+    )
+
+    return res.status(200).json({
+        message: "cart item deleted successfully"
+    })
 
 
 }

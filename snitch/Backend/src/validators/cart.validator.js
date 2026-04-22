@@ -37,3 +37,14 @@ export const incrementValidation = [
         .withMessage("Invalid variant ID format"),
     validator
 ]
+
+export const decrementValidation = [
+    param("productId")
+        .isMongoId()
+        .withMessage("Invalid product ID format"),
+    param("variantId")
+        .optional()
+        .isMongoId()
+        .withMessage("Invalid variant ID format"),
+    validator
+]
