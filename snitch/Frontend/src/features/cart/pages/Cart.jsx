@@ -10,8 +10,8 @@ const Cart = () => {
     handleDecrementQuantityInCart,
     handleDeleteCartItem,
   } = useCart();
-  const items = useSelector((state) => state.cart.items);
-
+  const cart = useSelector((state) => state.cart);
+  const { items, totalPrice, currency } = cart;
   useEffect(() => {
     handleGetCart();
   }, []);
@@ -34,12 +34,8 @@ const Cart = () => {
   };
 
   // Calculate totals
-  const subtotalAmount = (items || []).reduce((acc, item) => {
-    return acc + Number(item?.price?.amount || 0) * (item?.quantity || 1);
-  }, 0);
-
-  const currencySymbol = items?.[0]?.price?.currency || "$";
-  const formattedSubtotal = `${currencySymbol}${subtotalAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  const subtotalAmount = totalPrice || 0;
+  const formattedSubtotal = `${currency} ${Number(subtotalAmount).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
   return (
     <div className="min-h-screen bg-[#fdfbf7]">
@@ -64,7 +60,7 @@ const Cart = () => {
                 </h2>
               </div>
             ) : (
-              items.map((item, idx) => {
+              items?.map((item, idx) => {
                 const product = item?.product;
                 if (!product) return null;
 
@@ -81,6 +77,9 @@ const Cart = () => {
                     (v) => v._id === variantId,
                   );
                 }
+                const discountPrice =
+                  selectedVariant?.price?.amount || product.price?.amount;
+                const originalPrice = item.price?.amount;
 
                 const title = product.title || "Unknown Product";
                 const image =
@@ -127,6 +126,30 @@ const Cart = () => {
                           maximumFractionDigits: 2,
                         })}
                       </p>
+                      {originalPrice !== discountPrice &&
+                        (originalPrice > discountPrice ? (
+                          <p className="text-green-600 text-sm mt-2">
+                            You saved{" "}
+                            {(originalPrice - discountPrice).toLocaleString()}{" "}
+                            PKR <br />
+                            <span className="text-gray-500">
+                              Original: {originalPrice.toLocaleString()} → Now:{" "}
+                              {discountPrice.toLocaleString()}
+                            </span>
+                          </p>
+                        ) : (
+                          <p className="text-red-600 text-sm mt-2">
+                            Price increased by{" "}
+                            {Math.abs(
+                              originalPrice - discountPrice,
+                            ).toLocaleString()}{" "}
+                            PKR <br />
+                            <span className="text-gray-500">
+                              Original: {originalPrice.toLocaleString()} → Now:{" "}
+                              {discountPrice.toLocaleString()}
+                            </span>
+                          </p>
+                        ))}
                     </div>
                     <div className="flex items-center gap-4 bg-[#eef5f6] px-4 py-2 rounded-xl mt-4 sm:mt-0">
                       <button
@@ -164,7 +187,7 @@ const Cart = () => {
                         }
                         className="absolute top-1 right-1 cursor-pointer bg-red-500 px-2 py-1 rounded"
                       >
-                        <DeleteIcon size={18} className="text-white"/>
+                        <DeleteIcon size={18} className="text-white" />
                       </button>
                     </div>
                   </div>

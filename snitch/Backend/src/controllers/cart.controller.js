@@ -73,7 +73,56 @@ export const addToCart = async (req, res) => {
 
 
 export const getCart = async (req, res) => {
-    const cart = await cartModel.findOne({ user: req.user.id }).populate("items.product")
+    const cart = await cartModel.aggregate(
+        [
+            { $unwind: { path: '$items' } },
+            {
+                $lookup: {
+                    from: 'products',
+                    localField: 'items.product',
+                    foreignField: '_id',
+                    as: 'items.product'
+                }
+            },
+            { $unwind: { path: '$items.product' } },
+            {
+                $unwind: { path: '$items.product.variants' }
+            },
+            {
+                $match: {
+                    $expr: {
+                        $eq: [
+                            '$items.variant',
+                            '$items.product.variants._id'
+                        ]
+                    }
+                }
+            },
+            {
+                $addFields: {
+                    itemPrice: {
+                        price: {
+                            $multiply: [
+                                '$items.quantity',
+                                '$items.price.amount'
+                            ]
+                        },
+                        currency: '$items.price.currency'
+                    }
+                }
+            },
+            {
+                $group: {
+                    _id: '$_id',
+                    totalPrice: { $sum: '$itemPrice.price' },
+                    currency: {
+                        $first: '$itemPrice.currency'
+                    },
+                    items: { $push: '$items' }
+                }
+            }
+        ]
+    )
 
     if (!cart) {
         await cartModel.create({ user: req.user.id })
@@ -81,7 +130,7 @@ export const getCart = async (req, res) => {
 
     return res.status(200).json({
         message: "Cart retrieved successfully",
-        cart
+        cart: cart.length > 0 ? cart[0] : { items: [], totalPrice: 0, currency: "PKR" }
     })
 
 }
@@ -183,3 +232,6 @@ export const deleteCartItem = async (req, res) => {
 
 
 }
+
+
+
