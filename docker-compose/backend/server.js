@@ -2,19 +2,20 @@ import express from "express"
 import morgan from "morgan"
 import cors from "cors"
 import helmet from "helmet"
+import path from "path"
 
 const app = express()
 
 app.use(express.json())
 app.use(morgan("dev"))
+app.use(express.static("public"))
 
-app.get("/", (req, res) => {
-    return res.status(200).json("Welcome to docker")
-})
 
 app.get("/api/health", (req, res) => {
     return res.status(200).json("App is working...")
 })
+
+
 
 app.get("/api/users", (req, res) => {
     const users = [
@@ -35,6 +36,10 @@ app.get("/api/users", (req, res) => {
     return res.json(users)
 })
 
-app.listen(3000,()=>{
+app.get("*name", (req, res) => {
+    res.sendFile("./public/index.html", { root: __dirname });
+})
+
+app.listen(3000, () => {
     console.log("server is running on port 3000")
 })

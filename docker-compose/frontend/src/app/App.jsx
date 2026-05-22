@@ -7,11 +7,14 @@ const App = () => {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    axios.get("/api/users").then((u) => setUsers(u.data));
+    axios
+      .get("/api/users")
+      .then((u) => setUsers(u.data))
+      .catch((err) => console.error(err));
   }, []);
   return (
     <div>
-      <h1>Users</h1>
+      <h1>All Users Data</h1>
       {users.map((u) => {
         return <li key={u.id}>{u.name}</li>;
       })}
