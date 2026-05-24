@@ -14,7 +14,7 @@ const App = () => {
   }, []);
   return (
     <div>
-      <h1>All Users Data</h1>
+      <h1>All Users Data List</h1>
       {users.map((u) => {
         return <li key={u.id}>{u.name}</li>;
       })}
