@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kuber-deployment
+spec:
+  selector:
+    matchLabels:
+      editor: main-server
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        editor: main-server
+    spec:
+      containers:
+      - name: main-server
+        image: kuber_cohort_2:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3000
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+          requests:
+            memory: "64Mi"
+            cpu: "250m"

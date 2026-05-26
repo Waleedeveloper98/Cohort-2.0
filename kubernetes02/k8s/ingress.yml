@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+
+metadata:
+  name: kuber-app
+  labels:
+    app.kubernetes.io/name: kuber-app
+
+spec:
+  ingressClassName: nginx
+  rules:
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: main-server-service
+                port:
+                  number: 80
+    - http:
+        paths:
+          - path: "/api/product"
+            pathType: Prefix
+            backend:
+              service:
+                name: product-service
+                port:
+                  number: 80
