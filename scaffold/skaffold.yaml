@@ -1,0 +1,22 @@
+apiVersion: skaffold/v4beta14
+kind: Config
+metadata:
+  name: scaffold
+build:
+  artifacts:
+    - image: core
+      context: core
+      docker:
+        dockerfile: dockerfile.dev
+    - image: notification
+      context: notification
+      docker:
+        dockerfile: dockerfile.dev
+manifests:
+  rawYaml:
+    - k8s/core-deployment.yml
+    - k8s/core-service.yml
+    - k8s/notification-deployment.yml
+    - k8s/notification-service.yml
+    - k8s/ingress.yml
+    
